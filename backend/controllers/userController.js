@@ -4,8 +4,6 @@ import generateToken from "../utils/generateToken.js";
 import checkPassword from "../utils/passwordChecker.js";
 import encryptPassword from "../utils/encrypter.js";
 
-
-
 // @desc        Auth User and get Token
 // @route       POST /api/users/login
 // @access      Public (Anyone can access this domain)
@@ -28,8 +26,6 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 // @desc        Get user profile
 // @route       GET /api/users/profile
 // @access      Private (Only user can access this domain)
@@ -50,8 +46,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-
-
 // @desc        Register new user
 // @route       POST /api/users
 // @access      Public
@@ -69,9 +63,9 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User already exists!");
   }
-  
+
   const encryptedPassword = await encryptPassword(password); // Encrypt the password
-  
+
   //  Model.create() method is used to create a new document in MongoDB based on the defined schema.
   //  It simplifies the process of creating a new document by allowing you to pass an object with the
   //  desired field values as an argument.
@@ -84,7 +78,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (user) {
     // if user is successfully created
-    res.status(401);
     res.send({
       _id: user._id,
       name: user.name,

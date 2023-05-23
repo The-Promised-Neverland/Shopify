@@ -1,20 +1,23 @@
 import mongoose from "mongoose";
 
-const reviewSchema = mongoose.Schema({
-    name: { 
-        type: String,
-        required: true
+const reviewSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
     rating: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     comment: {
-        type: String,
-        required: true
-    }
-}, {
-    timestamps: true
-})
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
-export default reviewSchema
+export default reviewSchema;

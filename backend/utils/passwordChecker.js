@@ -5,4 +5,4 @@ const checkPassword = async (user, enteredPassword) => {
   return await bcrypt.compare(enteredPassword, user.password);
 };
 
-export default checkPassword
+export default checkPassword;

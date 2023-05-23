@@ -1,11 +1,13 @@
-import express from 'express'
-import { getProductById, getProducts } from '../controllers/productController.js'
+import express from "express";
+import {
+  getProductById,
+  getProducts,
+} from "../controllers/productController.js";
 
+const router = express.Router();
 
-const router = express.Router()
-
-router.route('/').get(getProducts)
-router.route('/:id').get(getProductById);
+router.route("/").get(getProducts);
+router.route("/:id").get(getProductById);
 
 /*{
     The code router.route('/').get(getProducts) is used to define a route handler for a specific HTTP method and path in a server application.
@@ -23,9 +25,7 @@ router.route('/:id').get(getProductById);
                          path.It contains the logic to handle the request and send a response back to the client.
 }*/
 
-export default router
-
-
+export default router;
 
 // -------------------------
 
@@ -42,7 +42,6 @@ export default router
 //     const products = await Product.find({}) // this results all products
 //     res.json(products)
 // }))
-
 
 // // @desc        Fetch single products, clicked ones
 // // @route       GET /api/products/:id
@@ -62,11 +61,3 @@ export default router
 // }))
 
 // export default router
-
-
-
-
-
-
-
-

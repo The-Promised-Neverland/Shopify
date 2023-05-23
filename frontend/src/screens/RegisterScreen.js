@@ -4,30 +4,35 @@ import { Form, Button, Row, Col, FormLabel } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { login } from "../actions/userActions";
+import { register } from "../actions/userActions";
 import FormContainer from "../components/FormContainer";
 
-const LoginScreen = () => {
+const RegisterScreen = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation(); // contains information about the current URL in your application.
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { loading, error, userInfo } = userLogin;
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister; // userInfo is the successfully created userModel Schema based json response
 
   const redirect = location.search ? location.search.split("=")[1] : "/";
 
   const submitHandler = (e) => {
     e.preventDefault(); // allows us to have single page application behaviour. This prevents the traditional form submission behaviour
-    dispatch(login({ email, password }));
+    if (password !== confirmPassword) {
+      setMessage("Password do not match");
+    } else {
+      dispatch(register({ name, email, password }));
+    }
   };
 
   useEffect(() => {
-    // console.log(userInfo)
-    // All values are truthy unless they are defined as falsy. That is, all values are truthy except false , 0 , -0 , 0n , "" , null , undefined , and NaN .
     if (userInfo) {
       navigate(redirect);
     }
@@ -35,10 +40,20 @@ const LoginScreen = () => {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
+      <h1>Sign Up</h1>
+      {message && <Message variant="danger">{message}</Message>}
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
+        <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="name"
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
         <Form.Group controlId="email">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
@@ -57,16 +72,25 @@ const LoginScreen = () => {
             onChange={(e) => setPassword(e.target.value)}
           ></Form.Control>
         </Form.Group>
+        <Form.Group controlId="confirmPassword">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Re-enter Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
         <Button type="submit" variant="primary">
-          Sign In
+          Register
         </Button>
       </Form>
 
       <Row className="py-3">
         <Col>
-          New Customer?{" "}
-          <Link to={redirect ? `/register?redirect=${redirect}` : "/register"}>
-            Register
+          Have an Account?{" "}
+          <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}>
+            Login
           </Link>
         </Col>
       </Row>
@@ -74,4 +98,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;

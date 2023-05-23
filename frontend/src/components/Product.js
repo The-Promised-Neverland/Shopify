@@ -1,14 +1,15 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import Rating from "./Rating";
 
 const Product = ({ product }) => {
   const navigate = useNavigate();
 
-  const productPage = () => { // go to product page
-    navigate(`/product/${product._id}`)
-  }
+  const productPage = () => {
+    // go to product page
+    navigate(`/product/${product._id}`);
+  };
 
   return (
     <Card className="my-3 p-3 rounded">
@@ -24,7 +25,6 @@ const Product = ({ product }) => {
         </Card.Text>
 
         <Card.Text as="h3">${product.price}</Card.Text>
-
       </Card.Body>
     </Card>
   );
