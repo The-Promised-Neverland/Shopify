@@ -9,7 +9,8 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <Provider store={store}>
+  // wrapping of the app with provider and passing store is required for redux to pass its state anywhere in the app
+  <Provider store={store}> 
     <App />
   </Provider>
 );

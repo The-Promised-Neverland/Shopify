@@ -11,14 +11,14 @@ export const addToCart = (id, qty) => {
             type: CART_ADD_ITEM,
             payload: {
                 product: data._id,
-                name:data.name,
+                name: data.name,
                 image: data.image,
                 price: data.price,
                 countInStock: data.countInStock,
                 quantity: qty
             }
         })
-        localStorage.setItem('cartItems',JSON.stringify(getState().cart.cartItems)) // storing the cart in localStorage as JSON string
+        localStorage.setItem('cartItems', JSON.stringify(getState().cart.cartItems)) // storing the cart in localStorage as JSON string
     }
 }
 
