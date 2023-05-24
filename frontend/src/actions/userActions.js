@@ -142,7 +142,7 @@ export const getUserDetails = (id) => {
   };
 };
 
-export const updateUserProfile = ({ user }) => {
+export const updateUserProfile = ( user ) => { // DISPATCHING A USER OBJECT WITH {name,email,password}
   return async (dispatch, getState) => {
     try {
       dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
@@ -165,6 +165,16 @@ export const updateUserProfile = ({ user }) => {
         type: USER_UPDATE_PROFILE_SUCCESS,
         payload: data,
       });
+
+      dispatch({  // to change the user state in navbar 
+        type: USER_LOGIN_SUCCESS,
+        payload: data
+      })
+
+      localStorage.setItem(
+        "userInfo",
+        JSON.stringify(getState().userLogin.userInfo)
+      ); // update the changes in localstate as well
     } catch (error) {
       dispatch({
         type: USER_UPDATE_PROFILE_FAIL,
