@@ -19,3 +19,11 @@ h2 {
   font-size: 1.4rem;
   padding: 0.5rem 0;
 }
+
+.bounce-up-link {
+  transition: transform 0.3s ease;
+}
+
+.bounce-up-link:hover {
+  transform: translateY(-5px);
+}

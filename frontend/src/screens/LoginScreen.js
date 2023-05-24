@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col, FormLabel } from "react-bootstrap";
+import { Form, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -18,7 +18,7 @@ const LoginScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  const redirect = location.search ? location.search.split("=")[1] : "";
 
   const submitHandler = (e) => {
     e.preventDefault(); // allows us to have single page application behaviour. This prevents the traditional form submission behaviour
@@ -29,7 +29,7 @@ const LoginScreen = () => {
     // console.log(userInfo)
     // All values are truthy unless they are defined as falsy. That is, all values are truthy except false , 0 , -0 , 0n , "" , null , undefined , and NaN .
     if (userInfo) {
-      navigate(redirect);
+      navigate(`/${redirect}`);
     }
   }, [navigate, userInfo, redirect]);
 

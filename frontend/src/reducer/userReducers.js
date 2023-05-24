@@ -11,7 +11,7 @@ import {
   USER_DETAILS_SUCCESS,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
-  USER_UPDATE_PROFILE_FAIL
+  USER_UPDATE_PROFILE_FAIL,
 } from "../constants/userContants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -55,7 +55,7 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
   // empty object
   switch (action.type) {
     case USER_DETAILS_REQUEST:
-      return {...state, loading: true };
+      return { ...state, loading: true };
 
     case USER_DETAILS_SUCCESS:
       return { loading: false, user: action.payload }; // no more loading and action.payload is data passed from action to reducer
@@ -68,7 +68,7 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
   }
 };
 
-export const userUpdateProfileReducer = (state = { }, action) => {
+export const userUpdateProfileReducer = (state = {}, action) => {
   // empty object
   switch (action.type) {
     case USER_UPDATE_PROFILE_REQUEST:
@@ -78,7 +78,7 @@ export const userUpdateProfileReducer = (state = { }, action) => {
       return { loading: false, success: true, userInfo: action.payload }; // to notify the success notification on screens component
 
     case USER_UPDATE_PROFILE_FAIL:
-      return { loading: false, error: action.payload }; 
+      return { loading: false, error: action.payload };
 
     default:
       return state;

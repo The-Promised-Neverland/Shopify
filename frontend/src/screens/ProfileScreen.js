@@ -1,3 +1,6 @@
+// Bug in this file...The changes in the form if successful, do not persist
+
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
@@ -35,7 +38,7 @@ const ProfileScreen = () => {
             setMessage("Password do not match");
         } else {
             dispatch(updateUserProfile({ name, email, password }))  // see updateUserProfile controller
-            if(success===true){
+            if (success === true) {
                 setIsSuccess(true);
             }
         }

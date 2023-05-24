@@ -26,9 +26,14 @@ const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null; // if there is userInfo in localStorage, load it in userInfoFromStorage..
 
+const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
+  ? JSON.parse(localStorage.getItem("shippingAddress"))
+  : {};
+
 const initialState = {
-  cart: { cartItems: cartItemsFromStorage }, // this will be kept locally
+  cart: { cartItems: cartItemsFromStorage, shippingAddress: shippingAddressFromStorage }, // this will be kept locally
   userLogin: { userInfo: userInfoFromStorage },
+
 };
 
 const middleware = [thunk];
