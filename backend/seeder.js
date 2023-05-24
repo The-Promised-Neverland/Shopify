@@ -8,6 +8,11 @@ import Product from "./models/productModel.js";
 import Order from "./models/orderModel.js";
 import connectDB from "./config/db.js";
 
+
+
+// THIS COMPONENT HERE IS JUST FOR DEVELOPMENT PHASE, SO TO FILL DATA IN DB 
+
+
 dotenv.config(); // to load the environment variables
 
 connectDB();

@@ -12,7 +12,7 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email: email }); // find the user with this email
 
-  if (user && (await checkPassword(user, password))) {
+  if (user && (await checkPassword(user, password))) { // if user exists and password matches
     res.send({
       _id: user._id,
       name: user.name,
@@ -30,7 +30,7 @@ const authUser = asyncHandler(async (req, res) => {
 // @route       GET /api/users/profile
 // @access      Private (Only user can access this domain)
 const getUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id); // getting it from previous middleware, protect middleware
+  const user = await User.findById(req.user._id); // getting it from PROTECT middleware after verifying token
 
   if (user) {
     // if user exists
@@ -91,4 +91,34 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser };
+
+// @desc        Update user profile
+// @route       GET /api/users/profile
+// @access      Private (Only user can access this domain)
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id); // getting it from previous middleware, protect middleware
+
+  if (user) {
+    // if user exists
+    user.name = req.body.name || user.name
+    user.email = req.body.email || user.email
+    if (req.body.password) {
+      const encryptedPassword = await encryptPassword(req.body.password); // Encrypt the password
+      user.password = encryptedPassword
+    }
+    const updatedUser = await user.save() // method is used to save the updated user object to the database, thereby persisting the changes made to the user object.
+    res.send({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      token: generateToken(updatedUser._id), 
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
+});
+
+
+export { authUser, getUserProfile, registerUser, updateUserProfile };
