@@ -1,14 +1,22 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = ({ login, shipping, payment, orders }) => {
+    const navigate = useNavigate();
+
+    const clickHandler = (route) => {
+        navigate(`/${route}`)
+    }
+
     return (
         <Nav className="justify-content-center mb-4">
             <Nav.Item>
                 <Nav.Link
+                    onClick={() => clickHandler("")}
                     disabled={!login}
                     style={{ cursor: 'default' }}
-                    className={login ? 'bounce-up-link' : ''}
+                    className={login ? 'bounce-up-link hover' : ''}
                 >
                     Sign In
                 </Nav.Link>
@@ -16,9 +24,10 @@ const Checkout = ({ login, shipping, payment, orders }) => {
 
             <Nav.Item>
                 <Nav.Link
+                    onClick={() => clickHandler("shipping")}
                     disabled={!shipping}
                     style={{ cursor: 'default' }}
-                    className={shipping ? 'bounce-up-link' : ''}
+                    className={shipping ? 'bounce-up-link hover' : ''}
                 >
                     Shipping
                 </Nav.Link>
@@ -26,9 +35,10 @@ const Checkout = ({ login, shipping, payment, orders }) => {
 
             <Nav.Item>
                 <Nav.Link
+                    onClick={() => clickHandler("payment")}
                     disabled={!payment}
                     style={{ cursor: 'default' }}
-                    className={payment ? 'bounce-up-link' : ''}
+                    className={payment ? 'bounce-up-link hover' : ''}
                 >
                     Payment
                 </Nav.Link>
@@ -36,9 +46,10 @@ const Checkout = ({ login, shipping, payment, orders }) => {
 
             <Nav.Item>
                 <Nav.Link
+                    onClick={() => clickHandler("orders")}
                     disabled={!orders}
                     style={{ cursor: 'default' }}
-                    className={orders ? 'bounce-up-link' : ''}
+                    className={orders ? 'bounce-up-link hover' : ''}
                 >
                     Order
                 </Nav.Link>

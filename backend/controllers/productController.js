@@ -8,7 +8,7 @@ import asyncHandler from "express-async-handler";
 // @access      Public (Anyone can access this domain)
 const getProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({}); // this results all products
-  res.json(products);
+  res.send(products);
 });
 
 // @desc        Fetch single products, clicked ones
@@ -19,7 +19,7 @@ const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
   if (product) {
     // if there is a product
-    res.json(product);
+    res.send(product);
   } else {
     res.status(404);
     throw new Error("Product not found");

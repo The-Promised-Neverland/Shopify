@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js"
 import userRoutes from "./routes/userRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
@@ -27,6 +28,8 @@ app.get("/", (req, res) => {
 // This modular approach helps organize and manage product-related routes in the application
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+
 
 // to handle express error(middlewares)
 app.use(notFound);

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const orderSchema = mongoose.Schema(
   {
-    name: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User", // relation between user and product
@@ -13,7 +13,7 @@ const orderSchema = mongoose.Schema(
           type: String,
           required: true,
         },
-        qty: {
+        quantity: {
           type: Number,
           required: true,
         },
@@ -50,7 +50,7 @@ const orderSchema = mongoose.Schema(
         required: true,
       },
     },
-    paymentMethod: {
+    paymentGateway: {
       type: String,
       required: true,
     },
@@ -79,6 +79,11 @@ const orderSchema = mongoose.Schema(
       default: 0.0,
     },
     totalPrice: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    itemsPrice: {
       type: Number,
       required: true,
       default: 0.0,

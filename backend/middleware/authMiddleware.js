@@ -1,5 +1,7 @@
+// This middleware is just to verify token for orders and login/register/update page
+
 import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
+import User from "../models/userModel.js"; // order modules relates to user id
 import asyncHandler from "express-async-handler";
 
 // next() passes control to the next middleware or route handler.
@@ -15,8 +17,7 @@ const protect = asyncHandler(async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1]; // split and get the second index, i.e the token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      //   In reality, the req object doesn't have a property named user by default. You can use any property name you prefer when adding data to the req object,
-      //   and it will be passed to the next middleware, and it will be able to access it. As in this case, this req.user can be acccessed by getuserProfile controller
+      //   In reality, the req object doesn't have a property named user by default. You can use any property name you prefer when adding data to the req object, and it will be passed to the next middleware, and will be able to access it. As in this case, this req.user can be accessed by getuserProfile controller, addOrderItems controller
       
       req.user = await User.findById(decoded.id).select("-password");
 
