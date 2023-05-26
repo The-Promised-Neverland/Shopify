@@ -6,8 +6,17 @@ import {
   productListReducer,
 } from "./reducer/productReducers";
 import { cartReducer } from "./reducer/cartReducers";
-import { userLoginReducer, userRegisterReducer, userDetailsReducer, userUpdateProfileReducer } from "./reducer/userReducers";
-import { orderCreateReducer, orderDetailsReducer } from './reducer/orderReducers'
+import {
+  userLoginReducer,
+  userRegisterReducer,
+  userDetailsReducer,
+  userUpdateProfileReducer,
+} from "./reducer/userReducers";
+import {
+  orderCreateReducer,
+  orderDetailsReducer,
+  orderPayReducer,
+} from "./reducer/orderReducers";
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -18,7 +27,8 @@ const reducer = combineReducers({
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
   orderCreate: orderCreateReducer,
-  orderDetails: orderDetailsReducer
+  orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")
@@ -41,10 +51,9 @@ const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
     shippingAddress: shippingAddressFromStorage,
-    paymentGateway: paymentGatewayFromStorage
+    paymentGateway: paymentGatewayFromStorage,
   }, // this will be kept locally
   userLogin: { userInfo: userInfoFromStorage },
-
 };
 
 const middleware = [thunk];
