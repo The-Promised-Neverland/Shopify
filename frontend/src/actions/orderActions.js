@@ -95,7 +95,7 @@ export const updateOrderPayStatus = (orderId, paymentStatus) => {
 
       const { data } = await axios.put(
         `/api/orders/${orderId}/pay_status`,
-        paymentStatus,
+        paymentStatus, // see the paymentStatus controller
         config
       );
       dispatch({

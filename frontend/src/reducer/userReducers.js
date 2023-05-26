@@ -12,6 +12,7 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_RESET,
 } from "../constants/userContants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -51,7 +52,7 @@ export const userRegisterReducer = (state = {}, action) => {
   }
 };
 
-export const userDetailsReducer = (state = { user: {} }, action) => {
+export const userDetailsReducer = (state = { loading: true }, action) => {
   // empty object
   switch (action.type) {
     case USER_DETAILS_REQUEST:
@@ -79,6 +80,9 @@ export const userUpdateProfileReducer = (state = {}, action) => {
 
     case USER_UPDATE_PROFILE_FAIL:
       return { loading: false, error: action.payload };
+
+    case USER_UPDATE_PROFILE_RESET:
+      return {};
 
     default:
       return state;

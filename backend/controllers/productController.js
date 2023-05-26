@@ -11,6 +11,7 @@ const getProducts = asyncHandler(async (req, res) => {
   res.send(products);
 });
 
+
 // @desc        Fetch single products, clicked ones
 // @route       GET /api/products/:id
 // @access      Public (Anyone can access this domain)

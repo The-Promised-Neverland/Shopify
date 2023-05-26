@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import checkPassword from "../utils/passwordChecker.js";
 import encryptPassword from "../utils/encrypter.js";
+import Order from "../models/orderModel.js";
 
 // @desc        Auth User and get Token
 // @route       POST /api/users/login
@@ -12,7 +13,8 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email: email }); // find the user with this email
 
-  if (user && (await checkPassword(user, password))) { // if user exists and password matches
+  if (user && (await checkPassword(user, password))) {
+    // if user exists and password matches
     res.send({
       _id: user._id,
       name: user.name,
@@ -26,19 +28,21 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc        Get user profile
+// @desc        Get user profile with orders(if any)
 // @route       GET /api/users/profile
 // @access      Private (Only user can access this domain)
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id); // getting it from PROTECT middleware after verifying token
 
   if (user) {
-    // if user exists
+    const userOrders = await Order.find({ user: req.user._id });
+
     res.send({
       _id: user._id,
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      orderList: userOrders || [], // if no userOrdersr, use an empty array
     });
   } else {
     res.status(404);
@@ -91,7 +95,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-
 // @desc        Update user profile
 // @route       GET /api/users/profile
 // @access      Private (Only user can access this domain)
@@ -100,25 +103,24 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
   if (user) {
     // if user exists
-    user.name = req.body.name || user.name
-    user.email = req.body.email || user.email
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
     if (req.body.password) {
       const encryptedPassword = await encryptPassword(req.body.password); // Encrypt the password
-      user.password = encryptedPassword
+      user.password = encryptedPassword;
     }
-    const updatedUser = await user.save() // method is used to save the updated user object to the database, thereby persisting the changes made to the user object.
+    const updatedUser = await user.save(); // method is used to save the updated user object to the database, thereby persisting the changes made to the user object.
     res.send({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
-      token: generateToken(updatedUser._id), 
+      token: generateToken(updatedUser._id),
     });
   } else {
     res.status(404);
     throw new Error("User not found!");
   }
 });
-
 
 export { authUser, getUserProfile, registerUser, updateUserProfile };

@@ -18,7 +18,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       //   In reality, the req object doesn't have a property named user by default. You can use any property name you prefer when adding data to the req object, and it will be passed to the next middleware, and will be able to access it. As in this case, this req.user can be accessed by getuserProfile controller, addOrderItems controller
-      
+
       req.user = await User.findById(decoded.id).select("-password");
 
       //   select('-password') is used in the Mongoose query to specify which fields should be included or excluded from the query result.

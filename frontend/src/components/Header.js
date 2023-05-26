@@ -14,7 +14,6 @@ const Header = () => {
     dispatch(logout());
   };
 
-
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
