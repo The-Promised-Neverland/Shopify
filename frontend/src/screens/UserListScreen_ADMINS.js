@@ -18,21 +18,25 @@ const UserListScreen_ADMINS = () => {
     const userList = useSelector((state) => state.userList)
     const { loading, error, users, success } = userList
 
-    
+
     const deleteHandler = (userID) => {
-        dispatch(DeleteUser_ADMINS_ONLY(userID))
+        if (window.confirm('Are you sure?')) {
+            dispatch(DeleteUser_ADMINS_ONLY(userID))
+        }
     }
-    
+
     useEffect(() => {
-        if(!userInfo || userInfo.isAdmin===false){ // if not admin or not logged in
+        if (!userInfo || userInfo.isAdmin === false) { // if not admin or not logged in
             navigate('/')
         }
-        dispatch(listUsers_ADMINS_ONLY())
+        else {
+            dispatch(listUsers_ADMINS_ONLY())
+        }
     }, [dispatch, success, navigate])
 
     return (
         <>
-            <h1>Users</h1>
+            <h1>Users</h1> 
             {loading ? <Loader /> : error ? <Message variant='danger'>{error}</Message> : (
                 <Table striped bordered hover responsive className="table-sm">
                     <thead>
@@ -56,12 +60,12 @@ const UserListScreen_ADMINS = () => {
                                     )}
                                 </td>
                                 <td>
-                                    <LinkContainer to={`/users/${eachUser._id}/edit`}>
+                                    <LinkContainer to={`/admin/users/${eachUser._id}/edit`}>
                                         <Button variant='white' className='btn-sm'>
                                             <i className='fas fa-edit'></i>
                                         </Button>
                                     </LinkContainer>
-                                    <Button variant='danger' className='btn-sm' onClick={()=>deleteHandler(eachUser._id)}>
+                                    <Button variant='danger' className='btn-sm' onClick={() => deleteHandler(eachUser._id)}>
                                         <i className='fas fa-trash'></i>
                                     </Button>
                                 </td>

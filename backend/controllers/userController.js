@@ -140,7 +140,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @route       GET /api/users
 // @access      Private (Only admins can access this domain)
 const getAllUsersProfile = asyncHandler(async (req, res) => {
-  const users = await User.find({}); // getting it from PROTECT middleware after verifying token
+  const users = await User.find({}); 
   res.send(users); // sending all users
 });
 
@@ -158,5 +158,47 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc        Get user by ID(for admins)
+// @route       GET /api/users/:userToShowid
+// @access      Private (Only admins can access this domain)
+const getUserProfileByAdmin = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select('-password'); // do not fetch password 
+  if(user){
+    res.send(user);
+  }
+  else{
+    res.status(404)
+    throw new Error('User not found!')
+  }
+});
 
-export { authUser, getUserProfile, registerUser, updateUserProfile, getAllUsersProfile, deleteUserProfile };
+
+// @desc        Update user (Done by Admins)
+// @route       PUT /api/users/:userToUpdateid
+// @access      Private (Only user can access this domain)
+const updateUserProfilebyAdmin = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id); // req.params.id gets id from the url
+
+  if (user) {
+    // if user exists
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.isAdmin = req.body.isAdmin
+
+    const updatedUser = await user.save(); // method is used to save the updated user object to the database, thereby persisting the changes made to the user object.
+    res.send({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
+});
+
+
+
+
+export { authUser, getUserProfile, registerUser, updateUserProfile, getAllUsersProfile, deleteUserProfile, getUserProfileByAdmin, updateUserProfilebyAdmin };

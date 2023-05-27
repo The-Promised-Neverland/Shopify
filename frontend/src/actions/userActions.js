@@ -6,6 +6,7 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_SUCCESS,
   USER_REGISTER_REQUEST,
+  USER_REGISTER_RESET,
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
@@ -74,6 +75,9 @@ export const logout = () => {
     })
     dispatch({
       type: USER_LIST_RESET
+    })
+    dispatch({
+      type: USER_REGISTER_RESET
     })
   };
 };
@@ -246,7 +250,6 @@ export const listUsers_ADMINS_ONLY = () => {
   };
 };
 
-
 export const DeleteUser_ADMINS_ONLY = (deleteUserID) => {
   return async (dispatch, getState) => {
       const { userInfo } = getState().userLogin;
@@ -268,3 +271,42 @@ export const DeleteUser_ADMINS_ONLY = (deleteUserID) => {
       });
   };
 };
+
+export const UserDetails_ADMINS_ONLY = (userID) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_DETAILS_REQUEST });
+
+      const { userInfo } = getState().userLogin;
+
+      const config = {
+        // https://www.freecodecamp.org/news/what-is-the-correct-content-type-for-json-request-header-mime-type-explained/
+        headers: {
+          // This means when you're sending JSON to the server or receiving JSON from the server, you should always declare the Content-Type of the header as application/json as this is the standard that the client and server understand.
+          Authorization: `Bearer ${userInfo.token}`, // Taken by protect middleware
+        },
+      };
+
+      const { data } = await axios.get(`/api/users/${userID}`, config); // userControllerAuth expects email and password
+      dispatch({
+        type: USER_DETAILS_SUCCESS,
+        payload: {
+          user: {
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            isAdmin: data.isAdmin,
+          }
+        }
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_DETAILS_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+}
