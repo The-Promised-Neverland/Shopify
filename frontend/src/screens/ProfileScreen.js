@@ -20,7 +20,6 @@ const ProfileScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -37,7 +36,9 @@ const ProfileScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault(); // allows us to have single page application behaviour. This prevents the traditional form submission behaviour
     setMessage(null);
-    setIsSuccess(false);
+    dispatch({
+      type: USER_UPDATE_PROFILE_RESET,
+    });
     if (password !== confirmPassword) {
       setMessage("Password do not match");
     } else {
@@ -46,16 +47,10 @@ const ProfileScreen = () => {
   };
 
   useEffect(() => {
-    if (success === true) {
-      setIsSuccess(true);
-    }
     if (!userInfo) {
       // if user is null
       navigate("/login");
     } else {
-      dispatch({
-        type: USER_UPDATE_PROFILE_RESET,
-      });
       if (!user) {
         dispatch(getUserDetails());
       } else {
@@ -63,7 +58,7 @@ const ProfileScreen = () => {
         setName(user.name);
       }
     }
-  }, [dispatch, navigate, userInfo, user]);
+  }, [dispatch, navigate, userInfo, user, success]);
 
   return loading ? (
     <Loader />
@@ -75,8 +70,7 @@ const ProfileScreen = () => {
         <h2>User Profile</h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
-        {isSuccess && <Message variant="success">Profile Updated!</Message>}
-        {loading && <Loader />}
+        {success && <Message variant="success">Profile Updated!</Message>}
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>

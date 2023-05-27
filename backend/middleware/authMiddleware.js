@@ -1,11 +1,12 @@
-// This middleware is just to verify token for orders and login/register/update page
+// next() passes control to the next middleware or route handler.
+
 
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js"; // order modules relates to user id
 import asyncHandler from "express-async-handler";
 
-// next() passes control to the next middleware or route handler.
 
+// This middleware is just to verify token for orders and login/register/update page
 const protect = asyncHandler(async (req, res, next) => {
   let token;
 
@@ -42,4 +43,15 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { protect };
+
+// Checking if the user is admin
+const isAdmin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next()
+  }
+  else {
+    res.status(401)
+    throw new Error('Tryna hack huh, get out!!! Admins only!!')
+  }
+}
+export { protect, isAdmin };

@@ -1,3 +1,13 @@
+/**
+The main HTTP request methods are:
+
+GET: Used to retrieve a resource from the server.
+POST: Used to submit data to be processed by the server.
+PUT: Used to update or replace a resource on the server.
+DELETE: Used to request the removal of a specified resource on the server.
+
+**/
+
 import User from "../models/userModel.js";
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
@@ -123,4 +133,30 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser, updateUserProfile };
+
+/*******************************************ADMIN PRIVELEGE CONTROLLERS****************************************/
+
+// @desc        Get ALL users(for admins)
+// @route       GET /api/users
+// @access      Private (Only admins can access this domain)
+const getAllUsersProfile = asyncHandler(async (req, res) => {
+  const users = await User.find({}); // getting it from PROTECT middleware after verifying token
+  res.send(users); // sending all users
+});
+
+// @desc        Delete user(for admins)
+// @route       DELETE /api/users/:userToBeDeletedId
+// @access      Private (Only admins can access this domain)
+const deleteUserProfile = asyncHandler(async (req, res) => {
+  const DeletedUser = await User.findByIdAndDelete(req.params.id)
+  if(DeletedUser){
+    res.send(DeletedUser) // deleted successfully
+  }
+  else{
+    res.status(404)
+    throw new Error('User not found!')
+  }
+});
+
+
+export { authUser, getUserProfile, registerUser, updateUserProfile, getAllUsersProfile, deleteUserProfile };

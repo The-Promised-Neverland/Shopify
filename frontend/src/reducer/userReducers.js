@@ -14,6 +14,11 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_RESET,
   USER_DETAILS_RESET,
+  USER_LIST_REQUEST,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
+  USER_LIST_RESET,
+  USER_LIST_USER_DELETE
 } from "../constants/userContants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -77,18 +82,50 @@ export const userUpdateProfileReducer = (state = {}, action) => {
   // empty object
   switch (action.type) {
     case USER_UPDATE_PROFILE_REQUEST:
-      return { loading: true, userInfo: null };
+      return { loading: true };
 
     case USER_UPDATE_PROFILE_SUCCESS:
-      return { loading: false, success: true, userInfo: action.payload }; // to notify the success notification on screens component
+      return { loading: false, success: action.payload.success }; // to notify the success notification on screens component
 
     case USER_UPDATE_PROFILE_FAIL:
       return { loading: false, error: action.payload };
 
     case USER_UPDATE_PROFILE_RESET:
-      return { userInfo: null };
+      return {};
 
     default:
       return state;
   }
 };
+
+
+/************************************ADMIN PRIVELEGES ACTIONS***************************************** */
+
+export const userListReducer = (state = { users: [] }, action) => {
+  switch (action.type) {
+    case USER_LIST_REQUEST:
+      return { loading: true };
+
+    case USER_LIST_SUCCESS:
+      return { loading: false, users: action.payload }; // to notify the success notification on screens component
+
+    case USER_LIST_FAIL:
+      return { loading: false, error: action.payload };
+
+    case USER_LIST_USER_DELETE:
+      return {
+        ...state,
+        users: state.users.filter(
+          (eachUser) => eachUser._id !== action.payload.User_ID_Delete
+        ),
+        success: true
+      };
+
+    case USER_LIST_RESET:
+      return { users: [] }
+    
+    default:
+      return state;
+  }
+};
+
