@@ -96,7 +96,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 // @desc        Update user profile
-// @route       GET /api/users/profile
+// @route       PUT /api/users/profile
 // @access      Private (Only user can access this domain)
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id); // getting it from previous middleware, protect middleware

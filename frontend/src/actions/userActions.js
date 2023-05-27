@@ -9,6 +9,7 @@ import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
+  USER_DETAILS_RESET,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
@@ -59,6 +60,9 @@ export const logout = () => {
     dispatch({
       type: USER_LOGOUT,
     });
+    dispatch({ // Reset user details
+      type: USER_DETAILS_RESET
+    })
   };
 };
 
@@ -134,6 +138,10 @@ export const updateUserProfile = (user) => {   // DISPATCHING A USER OBJECT WITH
         payload: data,
       });
 
+      dispatch({
+        type: USER_DETAILS_REQUEST,
+      })
+
       localStorage.setItem(
         "userInfo",
         JSON.stringify(getState().userLogin.userInfo)
@@ -168,7 +176,15 @@ export const getUserDetails = () => {
       const { data } = await axios.get(`/api/users/profile`, config); // userControllerAuth expects email and password
       dispatch({
         type: USER_DETAILS_SUCCESS,
-        payload: data,
+        payload: {
+          user: {
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            isAdmin: data.isAdmin,
+          },
+          orderList: data.orderList,
+        },
       });
     } catch (error) {
       dispatch({

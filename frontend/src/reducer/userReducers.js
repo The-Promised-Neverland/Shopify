@@ -13,6 +13,7 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_RESET,
+  USER_DETAILS_RESET,
 } from "../constants/userContants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -52,17 +53,20 @@ export const userRegisterReducer = (state = {}, action) => {
   }
 };
 
-export const userDetailsReducer = (state = { loading: true }, action) => {
+export const userDetailsReducer = (state = { user: null, orderList: [] }, action) => {
   // empty object
   switch (action.type) {
     case USER_DETAILS_REQUEST:
-      return { ...state, loading: true };
+      return { loading: true, user: null, orderList: [] };
 
     case USER_DETAILS_SUCCESS:
-      return { loading: false, user: action.payload }; // no more loading and action.payload is data passed from action to reducer
+      return { loading: false, user: action.payload.user, orderList: action.payload.orderList }; // no more loading and action.payload is data passed from action to reducer
 
     case USER_DETAILS_FAIL:
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer
+
+    case USER_DETAILS_RESET:
+      return { user: null, orderList: [] }
 
     default:
       return state;
@@ -82,7 +86,7 @@ export const userUpdateProfileReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
 
     case USER_UPDATE_PROFILE_RESET:
-      return {};
+      return { userInfo: null };
 
     default:
       return state;

@@ -1,5 +1,3 @@
-// Bug in this file...The changes in the form if successful, do not persist
-
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -7,9 +5,7 @@ import {
   Button,
   Row,
   Col,
-  ListGroup,
-  Image,
-  Card,
+  ListGroup
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -30,7 +26,7 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
+  const { loading, error, user, orderList } = userDetails;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -127,10 +123,10 @@ const ProfileScreen = () => {
       <Col md={9}>
         <h2>My Orders</h2>
         <ListGroup variant="flush">
-          {user.orderList.length === 0 ? (
+          {orderList.length === 0 ? (
             <Message variant="info">No orders found.</Message>
           ) : (
-            user.orderList.map((eachOrder, index) => (
+            orderList.map((eachOrder, index) => (
               <OrderCard order={eachOrder} />
             ))
           )}
