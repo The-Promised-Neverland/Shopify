@@ -21,14 +21,16 @@ const ProductScreen = () => {
   const [qty, setQty] = useState(1);
 
   const dispatch = useDispatch();
-  const productDetail = useSelector((state) => state.productDetail); // we are getting the states of productdproduct from the reducer in store.js
-
+  
+  const productDetail = useSelector((state) => state.productDetail); //  states of productdproduct from the reducer in store.js
   const { loading, error, product } = productDetail; // destructuring the required states
 
-  const { id } = useParams(); // getting the id from url. like http://localhost:3000/product/1 , that last 1 is the id
+  const { id } = useParams(); // productID from url
 
   useEffect(() => {
-    dispatch(listProductDetails(id));
+    if(!product || product._id!==id){
+      dispatch(listProductDetails(id));
+    }
   }, [dispatch, id]); // whenever id is changed, fetchProduct will be triggered
 
   const addToCartHandler = () => {
@@ -122,6 +124,7 @@ const ProductScreen = () => {
             <Col></Col>
           </Col>
         </Row>
+        // <span></span>
       )}
     </>
   );

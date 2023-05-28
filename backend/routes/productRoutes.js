@@ -16,9 +16,11 @@
 
 import express from "express";
 import {
+  createProductByAdmin,
   deleteProductByAdmin,
   getProductById,
   getProducts,
+  updateProductByAdmin,
 } from "../controllers/productController.js";
 import { protect, isAdmin } from '../middleware/authMiddleware.js'
 
@@ -30,6 +32,8 @@ router.route("/:id").get(getProductById);
 
 /***********************ADMIN ACCESS********************************* */
 
-router.route("/delete/:id").delete(protect,isAdmin,deleteProductByAdmin);
+router.route("/delete/:id").delete(protect, isAdmin, deleteProductByAdmin);
+router.route("/").post(protect, isAdmin, createProductByAdmin);
+router.route("/:id").put(protect, isAdmin, updateProductByAdmin);
 
 export default router;
