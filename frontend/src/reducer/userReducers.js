@@ -19,7 +19,11 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
-  USER_LIST_USER_DELETE
+  USER_LIST_USER_DELETE,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_RESET,
 } from "../constants/userContants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -55,26 +59,33 @@ export const userRegisterReducer = (state = {}, action) => {
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer
 
     case USER_REGISTER_RESET:
-        return {}
+      return {};
     default:
       return state;
   }
 };
 
-export const userDetailsReducer = (state = { user: null, orderList: [] }, action) => {
+export const userDetailsReducer = (
+  state = { user: null, orderList: [] },
+  action
+) => {
   // empty object
   switch (action.type) {
     case USER_DETAILS_REQUEST:
       return { loading: true, user: null, orderList: [] };
 
     case USER_DETAILS_SUCCESS:
-      return { loading: false, user: action.payload.user, orderList: action.payload.orderList }; // no more loading and action.payload is data passed from action to reducer
+      return {
+        loading: false,
+        user: action.payload.user,
+        orderList: action.payload.orderList,
+      }; // no more loading and action.payload is data passed from action to reducer
 
     case USER_DETAILS_FAIL:
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer
 
     case USER_DETAILS_RESET:
-      return { user: null, orderList: [] }
+      return { user: null, orderList: [] };
 
     default:
       return state;
@@ -85,10 +96,10 @@ export const userUpdateProfileReducer = (state = {}, action) => {
   // empty object
   switch (action.type) {
     case USER_UPDATE_PROFILE_REQUEST:
-      return { loading: true };
+      return { loading: true, user: null };
 
     case USER_UPDATE_PROFILE_SUCCESS:
-      return { loading: false, success: action.payload.success }; // to notify the success notification on screens component
+      return { loading: false, success: true, user: action.payload }; // to notify the success notification on screens component
 
     case USER_UPDATE_PROFILE_FAIL:
       return { loading: false, error: action.payload };
@@ -100,7 +111,6 @@ export const userUpdateProfileReducer = (state = {}, action) => {
       return state;
   }
 };
-
 
 /************************************ADMIN PRIVELEGES ACTIONS***************************************** */
 
@@ -121,14 +131,35 @@ export const userListReducer = (state = { users: [] }, action) => {
         users: state.users.filter(
           (eachUser) => eachUser._id !== action.payload.User_ID_Delete
         ),
-        success: true
+        success: true,
       };
 
     case USER_LIST_RESET:
-      return { users: [] }
-    
+      return { users: [] };
+
     default:
       return state;
   }
 };
 
+export const userUpdateByAdminReducer = (state = {}, action) => {
+  switch (action.state) {
+    case USER_UPDATE_REQUEST: {
+      return { loading: true };
+    }
+
+    case USER_UPDATE_SUCCESS: {
+      return { loading: false, success: true };
+    }
+
+    case USER_UPDATE_FAIL: {
+      return { loading: false, error: action.payload };
+    }
+    
+    case USER_UPDATE_RESET: {
+      return {}
+    }
+    default:
+      return state;
+  }
+};

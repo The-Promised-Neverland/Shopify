@@ -19,7 +19,10 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_FAIL,
   USER_LIST_RESET,
-  USER_LIST_USER_DELETE
+  USER_LIST_USER_DELETE,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from "../constants/userContants";
 import axios from "axios";
 
@@ -67,18 +70,20 @@ export const logout = () => {
     dispatch({
       type: USER_LOGOUT,
     });
-    dispatch({ // Reset user details
-      type: USER_DETAILS_RESET
-    })
-    dispatch({ // reset the update profile
-      type: USER_UPDATE_PROFILE_RESET
-    })
     dispatch({
-      type: USER_LIST_RESET
-    })
+      // Reset user details
+      type: USER_DETAILS_RESET,
+    });
     dispatch({
-      type: USER_REGISTER_RESET
-    })
+      // reset the update profile
+      type: USER_UPDATE_PROFILE_RESET,
+    });
+    dispatch({
+      type: USER_LIST_RESET,
+    });
+    dispatch({
+      type: USER_REGISTER_RESET,
+    });
   };
 };
 
@@ -127,7 +132,8 @@ export const register = ({ name, email, password }) => {
   };
 };
 
-export const updateUserProfile = (user) => {   // DISPATCHING A USER OBJECT WITH {name,email,password}
+export const updateUserProfile = (user) => {
+  // DISPATCHING A USER OBJECT WITH {name,email,password}
   return async (dispatch, getState) => {
     try {
       dispatch({ type: USER_UPDATE_PROFILE_REQUEST });
@@ -145,7 +151,7 @@ export const updateUserProfile = (user) => {   // DISPATCHING A USER OBJECT WITH
       const { data } = await axios.put(`/api/users/profile`, user, config);
       dispatch({
         type: USER_UPDATE_PROFILE_SUCCESS,
-        payload: { success: true },
+        payload: data,
       });
 
       dispatch({
@@ -156,7 +162,7 @@ export const updateUserProfile = (user) => {   // DISPATCHING A USER OBJECT WITH
 
       dispatch({
         type: USER_DETAILS_REQUEST,
-      })
+      });
 
       localStorage.setItem(
         "userInfo",
@@ -214,8 +220,6 @@ export const getUserDetails = () => {
   };
 };
 
-
-
 /************************************ADMIN PRIVELEGES ACTIONS***************************************** */
 
 export const listUsers_ADMINS_ONLY = () => {
@@ -236,7 +240,7 @@ export const listUsers_ADMINS_ONLY = () => {
       const { data } = await axios.get(`/api/users`, config); // userController Admin privelege
       dispatch({
         type: USER_LIST_SUCCESS,
-        payload: data
+        payload: data,
       });
     } catch (error) {
       dispatch({
@@ -252,23 +256,23 @@ export const listUsers_ADMINS_ONLY = () => {
 
 export const DeleteUser_ADMINS_ONLY = (deleteUserID) => {
   return async (dispatch, getState) => {
-      const { userInfo } = getState().userLogin;
+    const { userInfo } = getState().userLogin;
 
-      const config = {
-        // https://www.freecodecamp.org/news/what-is-the-correct-content-type-for-json-request-header-mime-type-explained/
-        headers: {
-          // This means when you're sending JSON to the server or receiving JSON from the server, you should always declare the Content-Type of the header as application/json as this is the standard that the client and server understand.
-          Authorization: `Bearer ${userInfo.token}`, // Taken by protect middleware
-        },
-      };
+    const config = {
+      // https://www.freecodecamp.org/news/what-is-the-correct-content-type-for-json-request-header-mime-type-explained/
+      headers: {
+        // This means when you're sending JSON to the server or receiving JSON from the server, you should always declare the Content-Type of the header as application/json as this is the standard that the client and server understand.
+        Authorization: `Bearer ${userInfo.token}`, // Taken by protect middleware
+      },
+    };
 
     const { data } = await axios.delete(`/api/users/${deleteUserID}`, config); // userController Admin privelege
-      dispatch({
-        type: USER_LIST_USER_DELETE,
-        payload: {
-          User_ID_Delete: data
-        }
-      });
+    dispatch({
+      type: USER_LIST_USER_DELETE,
+      payload: {
+        User_ID_Delete: data,
+      },
+    });
   };
 };
 
@@ -296,8 +300,9 @@ export const UserDetails_ADMINS_ONLY = (userID) => {
             name: data.name,
             email: data.email,
             isAdmin: data.isAdmin,
-          }
-        }
+          },
+          orderList: []
+        },
       });
     } catch (error) {
       dispatch({
@@ -309,4 +314,40 @@ export const UserDetails_ADMINS_ONLY = (userID) => {
       });
     }
   };
-}
+};
+
+export const UserUpdateDetails_ADMINS_ONLY = (ToUpdateuser) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_UPDATE_REQUEST });
+      const { userInfo } = getState().userLogin;
+
+      const config = {
+        // https://www.freecodecamp.org/news/what-is-the-correct-content-type-for-json-request-header-mime-type-explained/
+        headers: {
+          // This means when you're sending JSON to the server or receiving JSON from the server, you should always declare the Content-Type of the header as application/json as this is the standard that the client and server understand.
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userInfo.token}`, // Taken by protect middleware
+        },
+      };
+
+      const { data } = await axios.put(
+        `/api/users/${ToUpdateuser._id}`,
+        ToUpdateuser,
+        config
+      );
+
+      dispatch({
+        type: USER_UPDATE_SUCCESS
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+};

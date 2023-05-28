@@ -133,14 +133,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-
 /*******************************************ADMIN PRIVELEGE CONTROLLERS****************************************/
 
 // @desc        Get ALL users(for admins)
 // @route       GET /api/users
 // @access      Private (Only admins can access this domain)
 const getAllUsersProfile = asyncHandler(async (req, res) => {
-  const users = await User.find({}); 
+  const users = await User.find({});
   res.send(users); // sending all users
 });
 
@@ -148,13 +147,12 @@ const getAllUsersProfile = asyncHandler(async (req, res) => {
 // @route       DELETE /api/users/:userToBeDeletedId
 // @access      Private (Only admins can access this domain)
 const deleteUserProfile = asyncHandler(async (req, res) => {
-  const DeletedUser = await User.findByIdAndDelete(req.params.id)
-  if(DeletedUser){
-    res.send(DeletedUser) // deleted successfully
-  }
-  else{
-    res.status(404)
-    throw new Error('User not found!')
+  const DeletedUser = await User.findByIdAndDelete(req.params.id);
+  if (DeletedUser) {
+    res.send(DeletedUser); // deleted successfully
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
   }
 });
 
@@ -162,16 +160,14 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
 // @route       GET /api/users/:userToShowid
 // @access      Private (Only admins can access this domain)
 const getUserProfileByAdmin = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password'); // do not fetch password 
-  if(user){
+  const user = await User.findById(req.params.id).select("-password"); // do not fetch password
+  if (user) {
     res.send(user);
-  }
-  else{
-    res.status(404)
-    throw new Error('User not found!')
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
   }
 });
-
 
 // @desc        Update user (Done by Admins)
 // @route       PUT /api/users/:userToUpdateid
@@ -183,9 +179,10 @@ const updateUserProfilebyAdmin = asyncHandler(async (req, res) => {
     // if user exists
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    user.isAdmin = req.body.isAdmin
+    user.isAdmin = req.body.isAdmin;
 
     const updatedUser = await user.save(); // method is used to save the updated user object to the database, thereby persisting the changes made to the user object.
+    
     res.send({
       _id: updatedUser._id,
       name: updatedUser.name,
@@ -198,7 +195,13 @@ const updateUserProfilebyAdmin = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-
-export { authUser, getUserProfile, registerUser, updateUserProfile, getAllUsersProfile, deleteUserProfile, getUserProfileByAdmin, updateUserProfilebyAdmin };
+export {
+  authUser,
+  getUserProfile,
+  registerUser,
+  updateUserProfile,
+  getAllUsersProfile,
+  deleteUserProfile,
+  getUserProfileByAdmin,
+  updateUserProfilebyAdmin,
+};
