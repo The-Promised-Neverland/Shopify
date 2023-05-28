@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -8,6 +8,7 @@ import {
   UserDetails_ADMINS_ONLY,
   UserUpdateDetails_ADMINS_ONLY,
 } from "../actions/userActions";
+import { USER_UPDATE_RESET } from "../constants/userContants";
 import FormContainer from "../components/FormContainer";
 
 const UserEditScreen_ADMINS = () => {
@@ -17,7 +18,6 @@ const UserEditScreen_ADMINS = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const location = useLocation(); // contains information about the current URL in your application.
 
   const { id: userId } = useParams(); // renamed it as userId
 
@@ -36,9 +36,6 @@ const UserEditScreen_ADMINS = () => {
     dispatch(
       UserUpdateDetails_ADMINS_ONLY({ _id: userId, name, email, isAdmin })
     );
-    if (successUpdate) {
-      navigate("/admin/userList");
-    }
   };
 
   useEffect(() => {
@@ -50,7 +47,14 @@ const UserEditScreen_ADMINS = () => {
       setEmail(user.email);
       SetisAdmin(user.isAdmin);
     }
-  }, [dispatch, userId, user, successUpdate]);
+    if (successUpdate) {
+      dispatch({
+        type: USER_UPDATE_RESET
+      })
+      navigate("/admin/userList");
+    }
+  }, [dispatch, successUpdate, userId, user]);
+
 
   return (
     <>

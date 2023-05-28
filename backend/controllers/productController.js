@@ -27,4 +27,21 @@ const getProductById = asyncHandler(async (req, res) => {
   }
 });
 
-export { getProducts, getProductById };
+
+/****************************************ADMIN ACCESS********************************* */
+
+// @desc        Delete Product by Admin
+// @route       DELETE /api/products/delete/:ProductID
+// @access      Public (Anyone can access this domain)
+const deleteProductByAdmin = asyncHandler(async (req, res) => {
+  const Deletedproduct = await Product.findByIdAndDelete(req.params.id);
+  if (Deletedproduct) {
+    // SEND BACK THE DELETED PRODUCT
+    res.send(Deletedproduct);
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+export { getProducts, getProductById, deleteProductByAdmin };

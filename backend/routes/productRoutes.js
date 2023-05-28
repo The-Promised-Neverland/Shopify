@@ -1,14 +1,3 @@
-import express from "express";
-import {
-  getProductById,
-  getProducts,
-} from "../controllers/productController.js";
-
-const router = express.Router();
-
-router.route("/").get(getProducts);
-router.route("/:id").get(getProductById);
-
 /*{
     The code router.route('/').get(getProducts) is used to define a route handler for a specific HTTP method and path in a server application.
     Let's break it down:
@@ -25,39 +14,22 @@ router.route("/:id").get(getProductById);
                          path.It contains the logic to handle the request and send a response back to the client.
 }*/
 
+import express from "express";
+import {
+  deleteProductByAdmin,
+  getProductById,
+  getProducts,
+} from "../controllers/productController.js";
+import { protect, isAdmin } from '../middleware/authMiddleware.js'
+
+const router = express.Router();
+
+router.route("/").get(getProducts);
+router.route("/:id").get(getProductById);
+
+
+/***********************ADMIN ACCESS********************************* */
+
+router.route("/delete/:id").delete(protect,isAdmin,deleteProductByAdmin);
+
 export default router;
-
-// -------------------------
-
-// import express from 'express'
-// import Product from '../models/productModel.js'
-// import asyncHandler from 'express-async-handler'
-
-// const router = express.Router()
-
-// // @desc        Fetch all products
-// // @route       GET /api/products
-// // @access      Public (Anyone can access this domain)
-// router.get('/', asyncHandler(async (req, res) => {
-//     const products = await Product.find({}) // this results all products
-//     res.json(products)
-// }))
-
-// // @desc        Fetch single products, clicked ones
-// // @route       GET /api/products/:id
-// // @access      Public (Anyone can access this domain)
-
-// //  In the context of MongoDB and Mongoose, ObjectId refers to a specific data type used for unique identifiers of documents within a collection.It is a 12 - byte identifier typically represented as a 24 - character hexadecimal string
-// router.get('/:id', asyncHandler(async (req, res) => {
-//     const product = await Product.findById(req.params.id)
-//     // The `catch` method handles errors in promises. It invokes a callback function if an error occurs, allowing custom error handling. Example: `const result = await promise.catch(error => handle(error));` const product can hold a false, if error, or the Products from the server
-//     if (product) { // if there is a producut
-//         res.json(product)
-//     }
-//     else {
-//         res.status(404)
-//         throw new Error('Product not found')
-//     }
-// }))
-
-// export default router

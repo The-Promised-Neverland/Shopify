@@ -60,12 +60,13 @@ const UserListScreen_ADMINS = () => {
                                     )}
                                 </td>
                                 <td>
-                                    <LinkContainer to={`/admin/users/${eachUser._id}/edit`}>
+                                    {/* No permission to delete or edit an admin */}
+                                    <LinkContainer to={`/admin/users/${eachUser._id}/edit`} disabled={eachUser.isAdmin}> 
                                         <Button variant='white' className='btn-sm'>
                                             <i className='fas fa-edit'></i>
                                         </Button>
                                     </LinkContainer>
-                                    <Button variant='danger' className='btn-sm' onClick={() => deleteHandler(eachUser._id)}>
+                                    <Button variant='danger' disabled={eachUser.isAdmin} className='btn-sm' onClick={() => deleteHandler(eachUser._id)}>
                                         <i className='fas fa-trash'></i>
                                     </Button>
                                 </td>

@@ -5,6 +5,8 @@ import {
   PRODUCT_DETAIL_FAIL,
   PRODUCT_DETAIL_REQUEST,
   PRODUCT_DETAIL_SUCCESS,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAIL
 } from "../constants/productConstants";
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -18,6 +20,15 @@ export const productListReducer = (state = { products: [] }, action) => {
 
     case PRODUCT_LIST_FAIL:
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer
+
+    case PRODUCT_DELETE_SUCCESS: 
+      return {
+        ...state,
+        products: state.products.filter(
+          (eachProduct) => eachProduct._id !== action.payload.PRODUCT_ID_Delete
+        ),
+      };
+    
     default:
       return state;
   }
@@ -38,3 +49,4 @@ export const productDetailReducer = (state = { product: {} }, action) => {
       return state;
   }
 };
+

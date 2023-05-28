@@ -143,7 +143,7 @@ export const userListReducer = (state = { users: [] }, action) => {
 };
 
 export const userUpdateByAdminReducer = (state = {}, action) => {
-  switch (action.state) {
+  switch (action.type) {
     case USER_UPDATE_REQUEST: {
       return { loading: true };
     }
@@ -155,10 +155,11 @@ export const userUpdateByAdminReducer = (state = {}, action) => {
     case USER_UPDATE_FAIL: {
       return { loading: false, error: action.payload };
     }
-    
+
     case USER_UPDATE_RESET: {
       return {}
     }
+
     default:
       return state;
   }

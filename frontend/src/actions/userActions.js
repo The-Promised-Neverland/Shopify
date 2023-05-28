@@ -270,7 +270,7 @@ export const DeleteUser_ADMINS_ONLY = (deleteUserID) => {
     dispatch({
       type: USER_LIST_USER_DELETE,
       payload: {
-        User_ID_Delete: data,
+        User_ID_Delete: data._id,
       },
     });
   };
@@ -338,7 +338,20 @@ export const UserUpdateDetails_ADMINS_ONLY = (ToUpdateuser) => {
       );
 
       dispatch({
-        type: USER_UPDATE_SUCCESS
+        type: USER_UPDATE_SUCCESS,
+      });
+
+      dispatch({
+        type: USER_DETAILS_SUCCESS,
+        payload: {
+          user: {
+            _id: data._id,
+            name: data.name,
+            email: data.email,
+            isAdmin: data.isAdmin,
+          },
+          orderList: []
+        },
       });
     } catch (error) {
       dispatch({
