@@ -32,13 +32,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 
-// Multer for uploads
-app.use("/api/upload", uploadRoutes);
 
-// PAYPAL DOCUMENTATION
-app.get("/api/config/paypal", (req, res) => {
-  res.send(process.env.PAYPAL_CLIENT_ID);
-});
 
 /* 
 
@@ -52,8 +46,16 @@ For example:
 The /uploads URL path is mapped to the /uploads directory on the server. Any files placed in the /uploads directory can be accessed by appending their filename to the /uploads URL. So if a file named image.jpg in the /uploads directory, it can be accessed using the URL http://yourdomain.com/uploads/image.jpg. The static file server handles the request for that URL and serves the corresponding file to the client. This allows to serve files such as images, CSS files, JavaScript files, or uploaded files to clients by providing the appropriate URLs.
 
 */
-const __dirname = path.resolve();
-app.use('/uploads',express.static(path.join(__dirname,'/uploads')));
+const currentDirectory = path.resolve();
+app.use('/uploads',express.static(path.join(currentDirectory,'/uploads')));
+
+// Multer for uploads
+app.use("/api/upload", uploadRoutes);
+
+// PAYPAL DOCUMENTATION
+app.get("/api/config/paypal", (req, res) => {
+  res.send(process.env.PAYPAL_CLIENT_ID);
+});
 
 // to handle express error(middlewares)
 app.use(notFound);

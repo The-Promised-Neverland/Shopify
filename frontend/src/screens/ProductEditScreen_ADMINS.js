@@ -48,16 +48,18 @@ const ProductEditScreen_ADMINS = () => {
         const file = e.target.files[0]; // It is an array, since we have the ability to upload multiple files, but currently we are supporting single uploads.
 
         const formData = new FormData()
-        formData.append('image', file);
+        formData.append("image", file);
+
         setUploading(true);
 
         try {
             const config = {
                 headers: {
                     "Content-Type": "multipart/form-data"  // for uploading images being sent in body
+                    
                 }
             }
-            const { data } = await axios.post('api/upload', formData, config);
+            const { data } = await axios.post('/api/upload', formData, config);
             setImage(data)
             setUploading(false); // completed uploading
         } catch (error) {
@@ -133,10 +135,12 @@ const ProductEditScreen_ADMINS = () => {
                                 value={image}
                                 onChange={(e) => setImage(e.target.value)}
                             ></Form.Control>
-                            <Form.File id="image-file"
+                            <Form.Control
+                                type="file"
                                 label="Choose File"
-                                custom // to match the bootstrap styles theme
-                                onChange={uploadFileHandler}></Form.File>
+                                custom
+                                onChange={uploadFileHandler}
+                            ></Form.Control>
                             {uploading && <Loader />}
                         </Form.Group>
 

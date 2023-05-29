@@ -53,7 +53,7 @@ const UserEditScreen_ADMINS = () => {
       })
       navigate("/admin/userList");
     }
-  }, [dispatch, successUpdate, userId, user]);
+  }, [dispatch, navigate, successUpdate, userId, user]);
 
 
   return (

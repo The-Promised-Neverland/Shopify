@@ -10,13 +10,16 @@ const router = express.Router();
 
 // The disk storage engine gives you full control on storing files to disk.
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
-    }
-})
+  destination(req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename(req, file, cb) {
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
+  },
+});
 
 /**
 
@@ -46,27 +49,29 @@ By checking both extension types and MIME types, we can ensure that files are co
 */
 
 function fileTypeValidator(file, cb) {
-    const Validfiletypes = /jpg|jpeg|png/ // General format is:- /{file ext_type1}|{file ext_type2}|..../ 
-    // extname() is a method to get the extension from a given file
-    // test returns true/false as per the match. Simply, verifying if types are as per the validFilesTypes
-    const isValid_extname = Validfiletypes.test(path.extname(file.originalname).toLowerCase());
-    const isValid_mimeType = Validfiletypes.test(file.mimeType)
+  const validTypes = /jpg|jpeg|png/;
+  const match_extname = validTypes.test(
+    path.extname(file.originalname).toLowerCase()
+  );
+  const match_mimetype = validTypes.test(file.mimetype);
 
-    if(isValid_extname && isValid_mimeType){  // mime type and extension type are valid acceptable formats
-        return cb(null,true)
-    }
-    else{
-        cb('Images are only accepted! Please upload jpg,jpeg,png images');
-    }
+  // extname() is a method to get the extension from a given file
+  // test returns true/false as per the match. Simply, verifying if types are as per the validFilesTypes
+  if (match_extname && match_mimetype) {
+    // mime type and extension type are valid acceptable formats
+    return cb(null, true);
+  } else {
+    cb("ONLY IMAGES OF TYPE, jp,png,jpeg!");
+  }
 }
 
 // fileFilter from documentation to accept specific files
 const upload = multer({
-    storage,
-    fileFilter: function (req, file, cb) {
-        fileTypeValidator(file, cb);
-    }
-})
+  storage,
+  fileFilter: function (req, file, cb) {
+    fileTypeValidator(file, cb);
+  },
+});
 
 /**
  upload.single('image'): Middleware function that specifies the field name 'image' for the single file upload.
@@ -79,9 +84,9 @@ Request:
 Response:
     Body: The file path where the uploaded file is stored.
  */
-router.post('/',upload.single('image'),(req,res) => {
-    res.send(`/${req.file.path}`)
+
+router.post("/", upload.single("image"), (req, res) => {
+  res.send(`/${req.file.path}`);
 });
 
-export default router
-
+export default router;

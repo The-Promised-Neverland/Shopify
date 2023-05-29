@@ -27,7 +27,7 @@ export const createOrder = (order) => {
       };
 
       const { data } = await axios.post(
-        `/api/orders`,
+        "/api/orders",
         order, // to be accessed by req.body in orders controller
         config
       );
