@@ -17,14 +17,16 @@ import UserListScreen_ADMINS from "./screens/UserListScreen_ADMINS";
 import UserEditScreen_ADMINS from "./screens/UserEditScreen_ADMINS";
 import ProductListScreen_ADMINS from "./screens/ProductListScreen_ADMINS";
 import ProductEditScreen_ADMINS from "./screens/ProductEditScreen_ADMINS";
+import OrderListScreen_ADMINS from "./screens/OrderListScreen_ADMINS";
 
 const App = () => {
   return (
     <Router>
       <Header />
       <main className="py-3">
-        <Container>
+        <Container> 
           <Routes>
+            <Route path="/admin/orderList" element={<OrderListScreen_ADMINS />} />
             <Route path="/admin/productList" element={<ProductListScreen_ADMINS />} />
             <Route path="/admin/userList" element={<UserListScreen_ADMINS />} />
             <Route path="/order/:id" element={<OrderScreen />} />

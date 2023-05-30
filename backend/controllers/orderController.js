@@ -97,4 +97,42 @@ const updateOrderPaid = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById, updateOrderPaid };
+// ----------------------------ADMIN ACCESS------------------------
+
+// @desc        Get orders by admins
+// @route       PUT /api/orders
+// @access      Private (ONLY ADMINS)
+const getOrders_ADMINS_ONLY = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate("user", "_id name");
+  if (orders) {
+    res.send(orders);
+  } else {
+    res.status(404);
+    throw new Error("Order not found!");
+  }
+});
+
+// @desc        Update order as delivered by admins
+// @route       PUT /api/order/:Orderid/delivery_status
+// @access      Private
+const updateOrderDelivery_ADMINS_ONLY = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now(); 
+    await order.save();
+    res.send({ message: "Delivered!!!" });
+    res.status(200);
+  } else {
+    res.status(404);
+    throw new Error("Order not found!");
+  }
+});
+
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrderPaid,
+  getOrders_ADMINS_ONLY,
+  updateOrderDelivery_ADMINS_ONLY,
+};

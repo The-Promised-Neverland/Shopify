@@ -17,6 +17,7 @@
 import express from "express";
 import {
   createProductByAdmin,
+  createReview,
   deleteProductByAdmin,
   getProductById,
   getProducts,
@@ -28,6 +29,7 @@ const router = express.Router();
 
 router.route("/").get(getProducts);
 router.route("/:id").get(getProductById);
+router.route("/:id/reviews").put(protect, createReview);
 
 
 /***********************ADMIN ACCESS********************************* */

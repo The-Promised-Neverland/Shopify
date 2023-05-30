@@ -16,7 +16,11 @@ import {
   PRODUCT_UPDATE_REQUEST,
   PRODUCT_UPDATE_SUCCESS,
   PRODUCT_UPDATE_FAIL,
-  PRODUCT_UPDATE_RESET
+  PRODUCT_UPDATE_RESET,
+  PRODUCT_CREATE_REVIEW_REQUEST,
+  PRODUCT_CREATE_REVIEW_SUCCESS,
+  PRODUCT_CREATE_REVIEW_FAIL,
+  PRODUCT_CREATE_REVIEW_RESET,
 } from "../constants/productConstants";
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -36,7 +40,10 @@ export const productListReducer = (state = { products: [] }, action) => {
   }
 };
 
-export const productDetailReducer = (state = { product: {} }, action) => {  
+export const productDetailReducer = (
+  state = { product: { reviews: [] } },
+  action
+) => {
   switch (action.type) {
     case PRODUCT_DETAIL_REQUEST:
       return { loading: true }; // returning a state that request is send and loading and also sending an empty products array since no products exist as of now
@@ -66,7 +73,7 @@ export const productDeleteReducer = (state = {}, action) => {
       return { loading: false, error: action.payload };
 
     case PRODUCT_DELETE_RESET:
-      return {}
+      return {};
     default:
       return state;
   }
@@ -85,7 +92,7 @@ export const productCreateReducer = (state = {}, action) => {
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer
 
     case PRODUCT_CREATE_RESET:
-      return {}
+      return {};
 
     default:
       return state;
@@ -105,10 +112,28 @@ export const productUpdateReducer = (state = {}, action) => {
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer
 
     case PRODUCT_UPDATE_RESET:
-      return {}
+      return {};
 
     default:
       return state;
   }
 };
 
+export const productReviewCreateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PRODUCT_CREATE_REVIEW_REQUEST:
+      return { loading: true }; // returning a state that request is send and loading and also sending an empty products array since no products exist as of now
+
+    case PRODUCT_CREATE_REVIEW_SUCCESS:
+      return { loading: false, success: true }; // no more loading and action.payload is data passed from action to reducer
+
+    case PRODUCT_CREATE_REVIEW_FAIL:
+      return { loading: false, error: action.payload }; // no more loading and returning error to reducer
+
+    case PRODUCT_CREATE_REVIEW_RESET:
+      return {};
+
+    default:
+      return state;
+  }
+};

@@ -1,4 +1,4 @@
-import path from "path"
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
@@ -6,13 +6,18 @@ import connectDB from "./config/db.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import uploadRoutes from "./routes/uploadRoutes.js"
+import uploadRoutes from "./routes/uploadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import morgan from "morgan";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
 // The express.json() function is a built-in middleware function in Express.
 // It parses incoming requests with JSON payloads and is based on body-parser.
@@ -32,8 +37,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
 
-
-
 /* 
 
 uploads folder is inaccessible by default. Converting it to static folder to load in browser, using express
@@ -47,7 +50,7 @@ The /uploads URL path is mapped to the /uploads directory on the server. Any fil
 
 */
 const currentDirectory = path.resolve();
-app.use('/uploads',express.static(path.join(currentDirectory,'/uploads')));
+app.use("/uploads", express.static(path.join(currentDirectory, "/uploads")));
 
 // Multer for uploads
 app.use("/api/upload", uploadRoutes);

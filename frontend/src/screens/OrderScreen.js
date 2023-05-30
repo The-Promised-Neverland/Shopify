@@ -2,12 +2,19 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
-import { getOrderDetails, updateOrderPayStatus } from "../actions/orderActions";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  getOrderDetails,
+  updateOrderDeliverStatus,
+  updateOrderPayStatus,
+} from "../actions/orderActions";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/orderConstants";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
@@ -17,11 +24,30 @@ const OrderScreen = () => {
 
   const [SDKready, SetSDKReady] = useState(false);
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const orderDetails = useSelector((state) => state.orderDetails);
   const { orderInfo, loading, error } = orderDetails;
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay; // renaming loading to loadingPay
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    error: errorDeliver,
+    success: successDeliver,
+  } = orderDeliver; // renaming loading to loadingPay
+
+  // React Paypal button documentation- https://www.npmjs.com/package/react-paypal-button-v2
+  const successPaymentHandler = (paymentStatus) => {
+    dispatch(updateOrderPayStatus(id, paymentStatus)); // action takes {orderId,paymentStatus}
+  };
+
+  const deliveryHandler = (orderId) => {
+    dispatch(updateOrderDeliverStatus(orderId));
+  };
 
   useEffect(() => {
     const injectPayPalScript = async () => {
@@ -41,15 +67,15 @@ const OrderScreen = () => {
       document.body.appendChild(script);
     };
 
-    if (!orderInfo || orderInfo._id !== id || successPay) {
-      // TO AVOID INFINITE LOOP/REFRESHING AFTER PAYING
-      dispatch({
-        type: ORDER_PAY_RESET,
-      });
-      /* if order does not exist, or,
-         the fetched orderid does not match the required order id ,or,
-         if payment is successful, then dispatch and fetch the required order */
-      dispatch(getOrderDetails(id)); // passing order id
+    if (!userInfo) {
+      // user not loaded
+      navigate("/login");
+    }
+    /* if order does not exist, or,
+       the fetched orderid does not match the required order id ,or,
+       if payment is successful, then dispatch and fetch the required order */
+    if (!orderInfo || orderInfo._id !== id || successPay || successDeliver) {
+      dispatch(getOrderDetails(id)); // order id
     } else if (!orderInfo.isPaid) {
       // if order is not paid
       if (!window.paypal) {
@@ -63,14 +89,9 @@ const OrderScreen = () => {
     if (successPay === true) {
       navigate("/profile");
     }
-  }, [dispatch, orderInfo, id, successPay]);
+  }, [dispatch, navigate, orderInfo, userInfo, id, successPay, successDeliver]);
 
-  // React Paypal button documentation- https://www.npmjs.com/package/react-paypal-button-v2
-  const successPaymentHandler = (paymentStatus) => {
-    dispatch(updateOrderPayStatus(id, paymentStatus)); // action takes {orderId,paymentStatus}
-  };
-
-  return loading ? (
+  return loading || Object.entries(orderInfo).length === 0 ? (
     <Loader />
   ) : error ? (
     <Message variant="danger">{error}</Message>
@@ -98,9 +119,9 @@ const OrderScreen = () => {
                 {orderInfo.shippingAddress.postalCode},{" "}
                 {orderInfo.shippingAddress.country}
               </p>
-              {orderInfo.isDelivered ? (
+              {orderInfo.isDelivered === true ? (
                 <Message variant="success">
-                  Delivered on {orderInfo.deliveredAt}
+                  Delivered on {orderInfo.deliveredAt.substring(0, 10)}
                 </Message>
               ) : (
                 <Message variant="warning">Not yet Delivered.</Message>
@@ -164,24 +185,28 @@ const OrderScreen = () => {
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
                   <Col>${orderInfo.itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
                   <Col>${orderInfo.shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
                   <Col>${orderInfo.taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Row>
                   <Col>Total</Col>
@@ -203,6 +228,20 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
+
+              {loadingDeliver && <Loader />}
+              {errorDeliver && (
+                <Message variant="danger">{errorDeliver}</Message>
+              )}
+              {!orderInfo.isDelivered &&
+                orderInfo.isPaid === true &&
+                userInfo.isAdmin === true && (
+                  <ListGroup.Item style={{ display: "contents" }}>
+                    <Button onClick={() => deliveryHandler(orderInfo._id)}>
+                      Mark as Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
