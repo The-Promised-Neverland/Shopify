@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { logout } from "../actions/userActions";
+import Search from "./Search";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ const Header = () => {
   const { userInfo } = userLogin;
 
   const logoutHandler = () => {
-    navigate('/')
+    navigate("/");
     dispatch(logout());
   };
 
@@ -24,10 +25,9 @@ const Header = () => {
           <LinkContainer to="/">
             <Navbar.Brand>Shopify</Navbar.Brand>
           </LinkContainer>
-
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-
           <Navbar.Collapse id="basic-navbar-nav">
+            <Search />
             <Nav className="ms-auto">
               <LinkContainer to="/cart">
                 <Nav.Link>
@@ -53,7 +53,7 @@ const Header = () => {
                 </LinkContainer>
               )}
               {userInfo && userInfo.isAdmin && (
-                <NavDropdown title='Admin' id="adminmenu">
+                <NavDropdown title="Admin" id="adminmenu">
                   <LinkContainer to="/admin/userList">
                     <NavDropdown.Item>Users</NavDropdown.Item>
                   </LinkContainer>

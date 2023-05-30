@@ -3,12 +3,27 @@
 import Product from "../models/productModel.js";
 import asyncHandler from "express-async-handler";
 
-// @desc        Fetch all products
+// @desc        Fetch all products/or products with the keyword prefix
 // @route       GET /api/products
 // @access      Public (Anyone can access this domain)
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}); // this results all products
-  res.send(products);
+  // query searches for ? in url
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: `^${req.query.keyword}`, // only match with the prefix result
+          $options: "i",
+        },
+      }
+    : {};
+
+  const products = await Product.find({ ...keyword }); // this results all products
+  if (products) {
+    res.send(products);
+  } else {
+    res.status(404);
+    throw new Error("Please reload!");
+  }
 });
 
 // @desc        Fetch single products, clicked ones
@@ -17,7 +32,8 @@ const getProducts = asyncHandler(async (req, res) => {
 //  In the context of MongoDB and Mongoose, ObjectId refers to a specific data type used for unique identifiers of documents within a collection.It is a 12 - byte identifier typically represented as a 24 - character hexadecimal string
 const getProductById = asyncHandler(async (req, res) => {
   const product = await Product.findById(req.params.id);
-  if (product) { // if there is a product
+  if (product) {
+    // if there is a product
     res.send(product);
   } else {
     res.status(404);
@@ -106,8 +122,7 @@ const createReview = asyncHandler(async (req, res) => {
     if (alreadyReviewed) {
       res.status(400);
       throw new Error("Product Already Reviewed!");
-    } 
-    else {
+    } else {
       const review = {
         name: req.user.name,
         rating: Number(rating),
@@ -125,13 +140,11 @@ const createReview = asyncHandler(async (req, res) => {
       res.status(201);
       res.send({ message: "Review added successfully!" });
     }
-  }
-  else{
+  } else {
     res.status(400);
-    throw new Error('Product Not found')
+    throw new Error("Product Not found");
   }
 });
-
 
 export {
   getProducts,
@@ -139,5 +152,5 @@ export {
   deleteProductByAdmin,
   createProductByAdmin,
   updateProductByAdmin,
-  createReview
+  createReview,
 };

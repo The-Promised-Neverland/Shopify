@@ -25,7 +25,7 @@ const PlaceOrderScreen = () => {
 
   const cart = useSelector((state) => state.cart);
   const { cartItems, shippingAddress, paymentGateway } = cart;
-
+  
   // calculate price
   const itemsPrice = addDecimals(
     cartItems.reduce(

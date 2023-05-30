@@ -40,12 +40,14 @@ const ProductScreen = () => {
   const { id } = useParams(); // productID from url
 
   useEffect(() => {
-    if (successReview) {
-      alert("Review Submitted");
+    if (successReview || errorReview) {
+      if(successReview){
+        alert("Review Submitted");
+      }
       setRating(0);
       setComment("");
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
-    } else {
+    }else {
       dispatch(listProductDetails(id));
     }
   }, [dispatch, id, successReview]); // whenever id is changed, fetchProduct will be triggered

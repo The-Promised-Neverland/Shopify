@@ -35,10 +35,7 @@ const ProfileScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault(); // allows us to have single page application behaviour. This prevents the traditional form submission behaviour
-    setMessage(null);
-    dispatch({
-      type: USER_UPDATE_PROFILE_RESET,
-    });
+    dispatch({ type: USER_UPDATE_PROFILE_RESET })
     if (password !== confirmPassword) {
       setMessage("Password do not match");
     } else {
@@ -69,7 +66,6 @@ const ProfileScreen = () => {
       <Col md={3}>
         <h2>User Profile</h2>
         {message && <Message variant="danger">{message}</Message>}
-        {error && <Message variant="danger">{error}</Message>}
         {success && <Message variant="success">Profile Updated!</Message>}
         <Form onSubmit={submitHandler}>
           <Form.Group controlId="name">

@@ -25,6 +25,8 @@ const HomeScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <Row>
+          {products.length === 0 && <Message variant="warning">No products to show...</Message>}
+
           {products.map((product) => (
             <Col key={product.id} sm={13} md={6} lg={4} xl={3}>
               <Product product={product} />

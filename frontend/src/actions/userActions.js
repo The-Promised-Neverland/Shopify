@@ -24,6 +24,11 @@ import {
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
 } from "../constants/userContants";
+import {
+  ORDER_DETAILS_RESET,
+  ORDER_PAY_RESET,
+} from "../constants/orderConstants";
+import { PRODUCT_DETAIL_RESET } from "../constants/productConstants";
 import axios from "axios";
 
 export const login = ({ email, password }) => {
@@ -83,6 +88,15 @@ export const logout = () => {
     });
     dispatch({
       type: USER_REGISTER_RESET,
+    });
+    dispatch({
+      type: ORDER_DETAILS_RESET,
+    });
+    dispatch({
+      type: ORDER_PAY_RESET,
+    });
+    dispatch({
+      type: PRODUCT_DETAIL_RESET,
     });
   };
 };
@@ -301,7 +315,7 @@ export const UserDetails_ADMINS_ONLY = (userID) => {
             email: data.email,
             isAdmin: data.isAdmin,
           },
-          orderList: []
+          orderList: [],
         },
       });
     } catch (error) {
@@ -350,7 +364,7 @@ export const UserUpdateDetails_ADMINS_ONLY = (ToUpdateuser) => {
             email: data.email,
             isAdmin: data.isAdmin,
           },
-          orderList: []
+          orderList: [],
         },
       });
     } catch (error) {

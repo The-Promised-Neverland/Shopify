@@ -75,6 +75,8 @@ const OrderScreen = () => {
        the fetched orderid does not match the required order id ,or,
        if payment is successful, then dispatch and fetch the required order */
     if (!orderInfo || orderInfo._id !== id || successPay || successDeliver) {
+      dispatch({type: ORDER_PAY_RESET});
+      dispatch({type: ORDER_DELIVER_RESET});
       dispatch(getOrderDetails(id)); // order id
     } else if (!orderInfo.isPaid) {
       // if order is not paid
