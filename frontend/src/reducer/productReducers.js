@@ -31,7 +31,10 @@ export const productListReducer = (state = { products: [] }, action) => {
       return { loading: true, products: [] }; // returning a state that request is send and loading and also sending an empty products array since no products exist as of now
 
     case PRODUCT_LIST_SUCCESS:
-      return { loading: false, products: action.payload }; // no more loading and action.payload is data passed from action to reducer
+      return {
+        loading: false,
+        products: action.payload,
+      }; 
 
     case PRODUCT_LIST_FAIL:
       return { loading: false, error: action.payload }; // no more loading and returning error to reducer

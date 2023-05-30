@@ -4,7 +4,7 @@ import Product from "../models/productModel.js";
 import asyncHandler from "express-async-handler";
 
 // @desc        Fetch all products/or products with the keyword prefix
-// @route       GET /api/products
+// @route       GET /api/products?keyword=${prefixWord}
 // @access      Public (Anyone can access this domain)
 const getProducts = asyncHandler(async (req, res) => {
   // query searches for ? in url
@@ -25,6 +25,7 @@ const getProducts = asyncHandler(async (req, res) => {
     throw new Error("Please reload!");
   }
 });
+
 
 // @desc        Fetch single products, clicked ones
 // @route       GET /api/products/:id

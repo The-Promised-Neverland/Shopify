@@ -158,7 +158,7 @@ export const updateProduct_ADMINS_ONLY = (product) => {
   };
 };
 
-export const createReview_ADMINS_ONLY = ( productId, rating, comment ) => {
+export const createReview_ADMINS_ONLY = (productId, rating, comment) => {
   return async (dispatch, getState) => {
     try {
       dispatch({ type: PRODUCT_CREATE_REVIEW_REQUEST });
