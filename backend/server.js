@@ -24,10 +24,6 @@ if (process.env.NODE_ENV === "development") {
 // In short, this allows us to use req.body to extract json data
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
-
 // Mount the 'productRoutes' middleware at the '/api/products' base path
 // This allows handling routes related to products under the '/api/products' URL
 // For example, '/api/products' will be the main page, and additional routes can be added
@@ -59,6 +55,19 @@ app.use("/api/upload", uploadRoutes);
 app.get("/api/config/paypal", (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID);
 });
+
+if (process.env.NODE_ENV === "production") {
+  const currentDirectory = path.resolve();
+  app.use(express.static(path.join(currentDirectory, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(currentDirectory, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 // to handle express error(middlewares)
 app.use(notFound);
