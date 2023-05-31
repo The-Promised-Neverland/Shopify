@@ -7,7 +7,7 @@ import asyncHandler from "express-async-handler";
 // @route       GET /api/products?keyword=${prefixWord}
 // @access      Public (Anyone can access this domain)
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 10; // contents per page
+  const pageSize = process.env.PAGINATION_LIMIT; // contents per page
 
   // getting the page number from url using query
   const page = Number(req.query.pageNumber) || 1; // Current Page
