@@ -1,34 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { listProducts } from "../actions/productActions";
-import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const Search = () => {
-  const location = useLocation(); // gives the current URL
-  const dispatch = useDispatch();
+const Search = ({}) => {
+  const navigate = useNavigate();
 
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [keyword, setKeyword] = useState("");
 
-  useEffect(() => {
-    dispatch(listProducts(searchKeyword));
-  }, [dispatch, searchKeyword]);
-
-  useEffect(() => {
-    setSearchKeyword(""); // Reset search keyword when location,i.e.,URL changes
-  }, [location]);
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (keyword.trim()) {
+      navigate(`/search/${keyword}`);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
-    <Form style={{ display: "flex" }}>
+    <Form onSubmit={submitHandler} style={{ display: "flex" }}>
       <Form.Control
         type="text"
         name="q"
-        value={searchKeyword}
-        onChange={(e) => setSearchKeyword(e.target.value)}
-        placeholder="Search products..."
+        onChange={(e) => setKeyword(e.target.value)}
+        placeholder="Search Products..."
         className="mr-sm-2 ml-sm-5"
         style={{ marginRight: "10px" }}
-      />
+      ></Form.Control>
+      <Button type="submit" variant="outline-success" className="p-2">
+        Search
+      </Button>
     </Form>
   );
 };

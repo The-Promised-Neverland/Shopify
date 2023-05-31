@@ -59,6 +59,30 @@ h2 {
 }
 
 
+.carousel-caption {
+  font-family: cursive;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 
+.carousel-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.second-caption {
+    font-family: cursive;
+    position: absolute;
+    bottom: 0;
+    left: 265px;
+    right: 123px;
+    padding: 100px;
+    text-align: left;
+}
 
 

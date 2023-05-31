@@ -7,6 +7,11 @@ import asyncHandler from "express-async-handler";
 // @route       GET /api/products?keyword=${prefixWord}
 // @access      Public (Anyone can access this domain)
 const getProducts = asyncHandler(async (req, res) => {
+  const pageSize = 10; // contents per page
+
+  // getting the page number from url using query
+  const page = Number(req.query.pageNumber) || 1; // Current Page
+
   // query searches for ? in url
   const keyword = req.query.keyword
     ? {
@@ -17,15 +22,19 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const products = await Product.find({ ...keyword }); // this results all products
+  const count = await Product.countDocuments({ ...keyword }); // count products returned as per prefix keyword, or, all
+
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1)); // return product as per prefix keyword,or, all..
+
   if (products) {
-    res.send(products);
+    res.send({ products, page, pages: Math.ceil(count / pageSize) }); // pages-> total pages to show
   } else {
     res.status(404);
     throw new Error("Please reload!");
   }
 });
-
 
 // @desc        Fetch single products, clicked ones
 // @route       GET /api/products/:id
@@ -39,6 +48,20 @@ const getProductById = asyncHandler(async (req, res) => {
   } else {
     res.status(404);
     throw new Error("Product not found");
+  }
+});
+
+// @desc    Get top rated products
+// @route   GET /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({}).sort({ rating: -1 }).limit(5);
+  if(products){
+    res.send(products);
+  }
+  else{
+    res.status(404);
+    throw new Error('Products not found');
   }
 });
 
@@ -154,4 +177,5 @@ export {
   createProductByAdmin,
   updateProductByAdmin,
   createReview,
+  getTopProducts,
 };

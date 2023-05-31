@@ -22,15 +22,16 @@ import {
   getProductById,
   getProducts,
   updateProductByAdmin,
+  getTopProducts,
 } from "../controllers/productController.js";
-import { protect, isAdmin } from '../middleware/authMiddleware.js'
+import { protect, isAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 router.route("/").get(getProducts);
-router.route("/:id").get(getProductById);
+router.route("/top").get(getTopProducts);
 router.route("/:id/reviews").put(protect, createReview);
-
+router.route("/:id").get(getProductById);
 
 /***********************ADMIN ACCESS********************************* */
 

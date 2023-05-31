@@ -32,7 +32,7 @@ const UserListScreen_ADMINS = () => {
         else {
             dispatch(listUsers_ADMINS_ONLY())
         }
-    }, [dispatch, success, navigate])
+    }, [dispatch, success, navigate, userInfo])
 
     return (
         <>
