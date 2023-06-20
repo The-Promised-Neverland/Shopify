@@ -14,5 +14,4 @@ Paypal Sandbox Transaction Credentials:-
   Email- sb-43m3i226094581@personal.example.com
   Password- GQD=7FRf
   
- @Minor Bugs
- On the PayOrder Screen, paypal button might not load on certain occassions. Cause comes out to be the dynamically injected paypal script. Please keep reloading to fix the error. Working on it in the future updates...
+
