@@ -1,6 +1,6 @@
 const products = [
     {
-        _id: "0",
+        
         name: "Airpods",
         image: "/images/airpods.jpg",
         description:
@@ -13,7 +13,6 @@ const products = [
         numReviews: 24,
     },
     {
-        _id: "1",
         name: "Airtags",
         image: "/images/airtag.jpg",
         description:
@@ -26,7 +25,6 @@ const products = [
         numReviews: 71,
     },
     {
-        _id: "2",
         name: "Apple Polishing Cloth",
         image: "/images/cloth.jpg",
         description:
@@ -39,7 +37,6 @@ const products = [
         numReviews: 109,
     },
     {
-        _id: "3",
         name: "iMac",
         image: "/images/desktop.jpg",
         description:
@@ -52,7 +49,6 @@ const products = [
         numReviews: 819,
     },
     {
-        _id: "4",
         name: "HomePod",
         image: "/images/homepod.jpg",
         description:
@@ -65,7 +61,6 @@ const products = [
         numReviews: 1419,
     },
     {
-        _id: "5",
         name: "MacBook Pro",
         image: "/images/mac.jpg",
         description:
@@ -78,7 +73,6 @@ const products = [
         numReviews: 11519,
     },
     {
-        _id: "6",
         name: "Magic Mouse",
         image: "/images/mouse.jpg",
         description:
@@ -91,7 +85,6 @@ const products = [
         numReviews: 738,
     },
     {
-        _id: "7",
         name: "iPad Pro",
         image: "/images/pad.jpg",
         description:
@@ -104,7 +97,6 @@ const products = [
         numReviews: 71938,
     },
     {
-        _id: "8",
         name: "Apple Pencil",
         image: "/images/pencil.jpg",
         description:
@@ -117,7 +109,6 @@ const products = [
         numReviews: 29101,
     },
     {
-        _id: "9",
         name: "iPhone 14 Pro",
         image: "/images/phone.jpg",
         description:
@@ -130,7 +121,6 @@ const products = [
         numReviews: 192819,
     },
     {
-        _id: "10",
         name: "MagSafe Battery Pack",
         image: "/images/powerbank.jpg",
         description:
@@ -143,7 +133,6 @@ const products = [
         numReviews: 12012,
     },
     {
-        _id: "11",
         name: "Apple TV 4K",
         image: "/images/tv.jpg",
         description:
