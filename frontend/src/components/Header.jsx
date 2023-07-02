@@ -1,12 +1,10 @@
 import { Badge, Navbar, Nav, Container } from "react-bootstrap";
-import NavbarToggle from "react-bootstrap/esm/NavbarToggle";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
-  console.log(cartItems);
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect fixed="top">

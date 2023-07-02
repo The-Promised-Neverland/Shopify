@@ -9,7 +9,7 @@ import {
   ListGroup,
   Card,
   Button,
-  FormControl,
+  Form,
 } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { useGetProductsDetailsQuery } from "../slices/productsApiSlice";
@@ -99,7 +99,7 @@ const Productscreen = () => {
                         Qty
                       </Col>
                       <Col>
-                        <FormControl
+                        <Form.Control
                           as="select"
                           value={qty}
                           onChange={(e) => setQty(Number(e.target.value))}
@@ -111,7 +111,7 @@ const Productscreen = () => {
                               {x + 1}
                             </option>
                           ))}
-                        </FormControl>
+                        </Form.Control>
                       </Col>
                     </Row>
                   </ListGroup.Item>
