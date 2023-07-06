@@ -15,6 +15,9 @@ import {
 import './assets/bootstrap.custom.css';
 import { Provider } from 'react-redux';
 import store from './store.js';
+import LoginScreen from './screens/LoginScreen';
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,7 +25,7 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/product/:id" element={<Productscreen />} />
       <Route path="/Cart" element={<CartScreen />} />
-      <Route path="/login?redirect=/shipping" />
+      <Route path="/login" element= {<LoginScreen/>}/>
     </Route>
   )
 )
