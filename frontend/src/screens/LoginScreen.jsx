@@ -7,7 +7,6 @@ import Loader from '../components/Loader';
 import {useLoginMutation} from '../slices/usersApiSlice';
 import { setCredentials} from '../slices/authSlice';
 import { toast } from "react-toastify";
-import { set } from "mongoose";
 
 
 
@@ -78,7 +77,7 @@ const LoginScreen = () => {
 
       <Row className="py-3">
         <Col>
-          New Customer <Link to={ redirect ? '/register??redirect=${redirect}' : '/'}>Register</Link>
+          New Customer <Link to={ redirect ? `/register?redirect=${redirect}` : '/'}>Register</Link>
         </Col>
       </Row>
     </FormContainer>
