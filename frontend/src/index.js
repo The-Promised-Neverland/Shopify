@@ -17,6 +17,9 @@ import { Provider } from 'react-redux';
 import store from './store.js';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ShippingScreen from './screens/ShippingScreen';
+import PrivateRoute from './components/PrivateRoute';
+import PaymentScreen from './screens/PaymentScreen';
 
 
 const router = createBrowserRouter(
@@ -25,8 +28,14 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/product/:id" element={<Productscreen />} />
       <Route path="/Cart" element={<CartScreen />} />
-      <Route path="/login" element= {<LoginScreen/>}/>
+      <Route path="/login" element={<LoginScreen />} />
       <Route path="/register" element={<RegisterScreen />} />
+      
+      {/* // routes you need to be logged in for */}
+      <Route path='' element={<PrivateRoute/>}>  
+      <Route path="/shipping" element={<ShippingScreen />} />
+      <Route path="/payment" element={<PaymentScreen/>} />
+      </Route>
     </Route>
   )
 )
@@ -34,8 +43,8 @@ const router = createBrowserRouter(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-   <Provider store={store}> <RouterProvider router={router} />
-   </Provider>
+    <Provider store={store}> <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
 
