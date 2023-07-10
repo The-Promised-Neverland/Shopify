@@ -16,8 +16,16 @@ import { addToCart, removeFromCart } from "../slices/cartSlice";
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const addToCartHandler = async (product, qty) => {
-   dispatch(addToCart({ ...product, qty }));
+  const addToCartHandler = async (data, orderQty) => {
+    const cartSchema = {
+      product: data._id, // id of the product
+      name: data.name,
+      image: data.image,
+      price: data.price,
+      countInStock: data.countInStock,
+      qty: orderQty,
+    };
+    dispatch(addToCart(cartSchema));
   };
   const RemoveFromCartHandler = async (id) => {
     dispatch(removeFromCart(id));
@@ -25,7 +33,7 @@ const CartScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
   const checkOutHandler = () => {
-    navigate('/login?redirect=/shipping');
+    navigate("/login?redirect=/shipping");
   };
   let count = 0;
   return (
@@ -67,7 +75,11 @@ const CartScreen = () => {
                       </Form.Control>
                     </Col>
                     <Col md={2}>
-                      <Button type="button" variant="light" onClick={ () => RemoveFromCartHandler(item._id)}>
+                      <Button
+                        type="button"
+                        variant="light"
+                        onClick={() => RemoveFromCartHandler(item.product)}
+                      >
                         <FaTrash />
                       </Button>
                     </Col>
@@ -96,7 +108,7 @@ const CartScreen = () => {
                 type="button"
                 className="btn-block"
                 disabled={cartItems.length === 0}
-                onClick={ checkOutHandler}
+                onClick={checkOutHandler}
               >
                 Proceed to CheckOut
               </Button>

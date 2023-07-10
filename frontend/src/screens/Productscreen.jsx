@@ -16,6 +16,8 @@ import { useGetProductsDetailsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { addToCart } from "../slices/cartSlice";
+import { toast } from 'react-toastify';
+
 
 const Productscreen = () => {
   const { id: productId } = useParams();
@@ -28,8 +30,18 @@ const Productscreen = () => {
     error,
   } = useGetProductsDetailsQuery(productId);
   const addToCartHandler = () => {
-    dispatch(addToCart({ ...product, qty }));
-    navigate("/cart");
+    const cartSchema = {
+      product: product._id, // id of the product
+      name: product.name,
+      image: product.image,
+      price: product.price,
+      countInStock: product.countInStock,
+      qty,
+    };
+    dispatch(addToCart(cartSchema));
+    toast.success('Added successfully',{
+      autoClose: 1000,
+    })
   };
 
   return (
