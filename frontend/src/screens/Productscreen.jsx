@@ -61,7 +61,7 @@ const Productscreen = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Row style={{ alignItems: "center", columnGap: "6.5rem" }}>
+        <Row style={{ alignItems: "center", columnGap: "5rem" }}>
           <Col md={3}>
             <Image src={product.image} alt={product.name} fluid />
           </Col>
