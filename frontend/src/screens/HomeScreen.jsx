@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Spinner } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import { useGetProductsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader.jsx";
@@ -18,7 +18,9 @@ const HomeScreen = () => {
         </Message>
       ) : (
         <>
-          <h1>Latest Products</h1>
+          <h1 style={{ display: "flex", justifyContent: "center" }}>
+            Latest Products
+          </h1>
           <Row>
             {products.map((product) => {
               return (

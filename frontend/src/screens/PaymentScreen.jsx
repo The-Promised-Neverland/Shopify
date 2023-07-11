@@ -15,15 +15,11 @@ const PaymentScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
-  useEffect(
-    () => {
-      if (!shippingAddress) {
-        navigate("/shipping");
-      }
-    },
-    [shippingAddress],
-    navigate
-  );
+  useEffect(() => {
+    if (!shippingAddress) {
+      navigate("/shipping");
+    }
+  }, [shippingAddress]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -34,10 +30,10 @@ const PaymentScreen = () => {
   return (
     <FormContainer>
       <CheckoutSteps step1 step2 step3 />
-      <h1>Payment Method</h1>
+      <h1>Payment</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group>
-          <Form.Label as="legend">Select Method</Form.Label>
+          <Form.Label as="legend">Payment Gateways</Form.Label>
           <Col>
             <Form.Check
               type="radio"

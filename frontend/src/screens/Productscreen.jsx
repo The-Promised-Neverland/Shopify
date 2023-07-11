@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Rating from "../components/Rating";
 import {
@@ -16,13 +16,12 @@ import { useGetProductsDetailsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { addToCart } from "../slices/cartSlice";
-import { toast } from 'react-toastify';
-
+import { toast } from "react-toastify";
 
 const Productscreen = () => {
   const { id: productId } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const [qty, setQty] = useState(1);
   const {
     data: product,
@@ -39,9 +38,9 @@ const Productscreen = () => {
       qty,
     };
     dispatch(addToCart(cartSchema));
-    toast.success('Added successfully',{
-      autoClose: 1000,
-    })
+    toast.success("Added successfully", {
+      autoClose: 500,
+    });
   };
 
   return (
@@ -62,8 +61,8 @@ const Productscreen = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Row>
-          <Col md={5}>
+        <Row style={{ alignItems: "center", columnGap: "6.5rem" }}>
+          <Col md={3}>
             <Image src={product.image} alt={product.name} fluid />
           </Col>
 
@@ -83,7 +82,7 @@ const Productscreen = () => {
             </ListGroup>
           </Col>
 
-          <Col md={3} style={{ marginTop: "130px" }}>
+          <Col md={3} style={{ marginTop: "3rem" }}>
             <Card>
               <ListGroup variant="flush">
                 <ListGroup.Item>

@@ -4,8 +4,6 @@ import {
   Col,
   ListGroup,
   Image,
-  Form,
-  Button,
   Card,
 } from "react-bootstrap";
 import Message from "../components/Message";
@@ -19,11 +17,10 @@ const OrderScreen = () => {
 
   const {
     data: order,
-    refetch,
     isLoading,
     error,
   } = useGetOrderDetailsQuery(orderId);
-  console.log(order);
+
   return isLoading ? (
     <Loader />
   ) : error ? (
@@ -40,10 +37,10 @@ const OrderScreen = () => {
                 <strong>Name: </strong> {order.user.name}
               </p>
               <p>
-                <strong>Email:</strong> {order.user.email}
+                <strong>Email: </strong> {order.user.email}
               </p>
               <p>
-                <strong>Address:</strong>
+                <strong>Address: </strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city}{" "}
                 {order.shippingAddress.postalCode},{" "}
                 {order.shippingAddress.country}
@@ -55,9 +52,9 @@ const OrderScreen = () => {
               )}
             </ListGroup.Item>
             <ListGroup.Item>
-              <h2>Payment Method</h2>
+              <h2>Payment Gateway</h2>
               <p>
-                <strong>Method:</strong>
+                <strong>Payment Platform: </strong>
                 {order.paymentMethod}
               </p>
               {order.isPaid ? (
@@ -70,7 +67,7 @@ const OrderScreen = () => {
               <h2>Order Item</h2>
               {order.orderItems.length === 0 && <span>not</span>}
               {order.orderItems.map((item, index) => (
-                <ListGroup.Item key={index}>
+                <ListGroup.Item key={index} style={{ border: "0px" }}>
                   <Row>
                     <Col md={1}>
                       <Image src={item.image} alt={item.name} fluid rounded />
@@ -92,49 +89,50 @@ const OrderScreen = () => {
             </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Card>
-          <ListGroup variant="flush">
-            <ListGroup.Item
-              style={{
-                backgroundColor: "ghostwhite",
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-              }}
-            >
-              <h2 style={{ display: "flex", justifyContent: "center" }}>
-                Order Summary
-              </h2>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Items:</Col>
-                  <Col>${order.itemsPrice}</Col>
-                </Row>
+        <Col>
+          <Card>
+            <ListGroup variant="flush">
+              <ListGroup.Item
+                style={{
+                  backgroundColor: "ghostwhite",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <h2 style={{ display: "flex", justifyContent: "center" }}>
+                  Order Summary
+                </h2>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Items:</Col>
+                    <Col>${order.itemsPrice}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Shipping Price:</Col>
+                    <Col>${order.shippingPrice}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Tax Price:</Col>
+                    <Col>${order.taxPrice}</Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Col>
+                      <strong>Total Price:</strong>
+                    </Col>
+                    <Col>${order.totalPrice}</Col>
+                  </Row>
+                </ListGroup.Item>
               </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Shipping Price:</Col>
-                  <Col>${order.shippingPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Tax Price:</Col>
-                  <Col>${order.taxPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>
-                    <strong>Total Price:</strong>
-                  </Col>
-                  <Col>${order.totalPrice}</Col>
-                </Row>
-              </ListGroup.Item>
-              
-            </ListGroup.Item>
-          </ListGroup>
-        </Card>
+            </ListGroup>
+          </Card>
+        </Col>
       </Row>
     </>
   );
