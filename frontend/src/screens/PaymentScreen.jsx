@@ -33,7 +33,7 @@ const PaymentScreen = () => {
       <h1>Payment</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group>
-          <Form.Label as="legend">Payment Gateways</Form.Label>
+          <Form.Label as="legend">Select payment gateway</Form.Label>
           <Col>
             <Form.Check
               type="radio"

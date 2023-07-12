@@ -22,6 +22,7 @@ import User from '../models/userModel.js';
     } else {
         res.status(401);
         throw new Error("Not authorized, no token");
+        
     }
 });
 
