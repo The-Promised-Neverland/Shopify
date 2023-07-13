@@ -30,12 +30,12 @@ const CartScreen = () => {
   const RemoveFromCartHandler = async (id) => {
     dispatch(removeFromCart(id));
   };
-  const cart = useSelector((state) => state.cart);
-  const { cartItems } = cart;
+  const { cartItems } = useSelector((state) => state.cart);
+
   const checkOutHandler = () => {
     navigate("/login?redirect=/shipping");
   };
-  let count = 0;
+
   return (
     <Row>
       <Col md={8}>
@@ -48,16 +48,35 @@ const CartScreen = () => {
           <ListGroup variant="flush">
             {cartItems.map((item) => {
               return (
-                <ListGroup.Item key={item._id}>
+                <ListGroup.Item key={item.product}>
                   <Row>
-                    <Col md={2}>
+                    <Col
+                      md={2}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
                       <Image src={item.image} alt={item.name} fluid rounded />
                     </Col>
-                    <Col md={3}>
-                      <Link to={`/product/${item._id}`}>{item.name}</Link>
+                    <Col
+                      md={2}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Link
+                        to={`/product/${item.product}`}
+                        style={{ textDecoration: "none" }}
+                      >
+                        {item.name}
+                      </Link>
                     </Col>
-                    <Col md={2}>${item.price}</Col>
-                    <Col md={2}>
+                    <Col
+                      md={2}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      ${item.price}
+                    </Col>
+                    <Col
+                      md={2}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
                       <Form.Control
                         as="select"
                         value={item.qty}
@@ -74,13 +93,16 @@ const CartScreen = () => {
                         )}
                       </Form.Control>
                     </Col>
-                    <Col md={2}>
+                    <Col
+                      md={2}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
                       <Button
                         type="button"
                         variant="light"
                         onClick={() => RemoveFromCartHandler(item.product)}
                       >
-                        <FaTrash />
+                        <FaTrash color="red" />
                       </Button>
                     </Col>
                   </Row>

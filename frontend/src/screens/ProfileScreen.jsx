@@ -103,6 +103,7 @@ const ProfileScreen = () => {
           {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
+
       <Col md={9}>
         <h2 style={{ display: "flex", justifyContent: "center" }}>My Orders</h2>
         {isLoading ? (
@@ -147,17 +148,35 @@ const ProfileScreen = () => {
               {orders.map((order) => (
                 <tr key={order._id}>
                   <td>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "6px",
+                      }}
+                    >
                       {order._id}
                     </div>
                   </td>
                   <td>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "6px",
+                      }}
+                    >
                       {order.createdAt.substring(0, 10)}
                     </div>
                   </td>
                   <td>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "6px",
+                      }}
+                    >
                       ${order.totalPrice}
                     </div>
                   </td>
@@ -192,8 +211,11 @@ const ProfileScreen = () => {
                     </div>
                   </td>
                   <td>
-                    <LinkContainer to={`/order/${order._id}`}>
-                      <Button className="btn-sm" variant="light">
+                    <LinkContainer
+                      to={`/order/${order._id}`}
+                      style={{ color: "ghostwhite" }}
+                    >
+                      <Button className="btn-sm" variant="dark">
                         Details
                       </Button>
                     </LinkContainer>

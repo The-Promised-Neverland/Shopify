@@ -29,9 +29,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: data,
             })
+        }),
+        getUsers: builder.query({
+            query: () => ({
+                url: `${USERS_URL}`,
+            })
         })
 
     }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation, useProfileMutation } = usersApiSlice;
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation, useProfileMutation, useGetUsersQuery } = usersApiSlice;

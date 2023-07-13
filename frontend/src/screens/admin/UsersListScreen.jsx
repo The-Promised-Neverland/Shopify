@@ -3,15 +3,15 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { useGetOrdersQuery } from "../../slices/ordersApiSlice";
-import { FaTimes } from "react-icons/fa";
+import { useGetUsersQuery } from "../../slices/usersApiSlice";
+import { FaTimes, FaCheck, FaTrash } from "react-icons/fa";
 
-const OrderListScreen = () => {
-  const { data: orders, isLoading, error } = useGetOrdersQuery();
+const UsersListScreen = () => {
+  const { data: users, isLoading, error } = useGetUsersQuery();
 
   return (
     <>
-      <h1>Orders</h1>
+      <h1>Users</h1>
       {isLoading === true ? (
         <Loader />
       ) : error ? (
@@ -27,102 +27,78 @@ const OrderListScreen = () => {
               </th>
               <th>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  USER
+                  NAME
                 </div>
               </th>
               <th>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  DATE
+                  E-MAIL
                 </div>
               </th>
               <th>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  TOTAL
+                  ADMIN ACCESS
                 </div>
               </th>
-              <th>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  PAID
-                </div>
-              </th>
-              <th>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  DELIVERED
-                </div>
-              </th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
-              <tr key={order._id}>
+            {users.map((user) => (
+              <tr key={user._id}>
                 <td>
                   {" "}
                   <div style={{ display: "flex", justifyContent: "center" }}>
-                    {order._id}
-                  </div>
-                </td>
-                <td>
-                  {" "}
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    {order.user && order.user.name}
+                    {user._id}
                   </div>
                 </td>
                 <td>
                   {" "}
                   <div style={{ display: "flex", justifyContent: "center" }}>
-                    {order.createdAt.substring(0, 10)}
+                    {user.name}
                   </div>
                 </td>
                 <td>
                   <div style={{ display: "flex", justifyContent: "center" }}>
-                    ${order.totalPrice}
+                    {user.email}
                   </div>
                 </td>
                 <td>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {order.isPaid ? (
-                      order.paidAt.substring(0, 10)
+                  <div style={{ display: "flex", justifyContent: "center" , marginTop:'6px' }}>
+                    {user.isAdmin === true ? (
+                      <FaCheck style={{ color: "green" }} />
                     ) : (
                       <FaTimes style={{ color: "red" }} />
                     )}
                   </div>
                 </td>
                 <td>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "4px",
-                    }}
-                  >
-                    {order.isDelivered ? (
-                      order.deliveredAt.substring(0, 10)
-                    ) : (
-                      <FaTimes style={{ color: "red" }} />
-                    )}
-                  </div>
-                </td>
-                <td>
-                  <LinkContainer
-                    to={`/order/${order._id}`}
-                    style={{ backgroundColor: "#7b8a8b" }}
-                  >
                     <Button
                       className="btn-sm"
                       style={{
                         color: "ghostwhite",
                       }}
                     >
-                      Details
+                      Make Admin
                     </Button>
-                  </LinkContainer>
+                  
+                </td>
+                <td>
+                  <Button
+                    style={{
+                      padding: "0",
+                      backgroundColor: "transparent",
+                      border: "none",
+                      boxShadow: "none",
+                      outline: "none",
+                    }}
+                    disabled={user.isAdmin === true}
+                  >
+                    <FaTrash
+                      style={{ color: user.isAdmin === true ? "black" : "red" }}
+                    />
+                  </Button>
                 </td>
               </tr>
             ))}
@@ -133,4 +109,4 @@ const OrderListScreen = () => {
   );
 };
 
-export default OrderListScreen;
+export default UsersListScreen;

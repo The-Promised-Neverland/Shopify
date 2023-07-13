@@ -87,7 +87,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
             name: user.name,
             email: user.email,
             isAdmin: user.isAdmin
-
         });
 
     }else{
@@ -132,7 +131,15 @@ const UpdateUserProfile = asyncHandler(async (req, res) => {
 // @route   GET/api/users
 //@access   Private/Admin
 const getUser = asyncHandler(async (req, res) => {
-    res.send('get user');
+    const users = await User.find({}).select('-password');
+    if(users){
+        res.status(200);
+        res.json(users);
+    }
+    else{
+        res.status(404);
+        throw new Error('Not found...')
+    }
 });
 
 // @desc    Get User by ID

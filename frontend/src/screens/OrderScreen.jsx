@@ -1,5 +1,13 @@
 import { Link, useParams } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Button,
+  Spinner,
+} from "react-bootstrap";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -7,10 +15,11 @@ import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
+  useDeliverOrderMutation,
 } from "../slices/ordersApiSlice";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 
 const OrderScreen = () => {
@@ -24,6 +33,10 @@ const OrderScreen = () => {
   } = useGetOrderDetailsQuery(orderId);
 
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
+
+  const [deliverOrder, { isLoading: loadingDeliver }] =
+    useDeliverOrderMutation();
+
 
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
@@ -91,6 +104,16 @@ const OrderScreen = () => {
       });
   }
 
+  const deliverOrderHandler = async () => {
+    try {
+      await deliverOrder(orderId);
+      refetch();
+      toast.success("Order delivered");
+    } catch (error) {
+      toast.error(error?.data?.message || error.message);
+    }
+  };
+
   return isLoading ? (
     <Loader />
   ) : error ? (
@@ -121,7 +144,7 @@ const OrderScreen = () => {
                 {order._id}
               </p>
               {order.isDelivered ? (
-                <Message variant="success">Delivered</Message>
+                <Message variant="success">Delivered on {order.deliveredAt}</Message>
               ) : (
                 <Message variant="danger">Not Delivered</Message>
               )}
@@ -144,10 +167,13 @@ const OrderScreen = () => {
               {order.orderItems.map((item, index) => (
                 <ListGroup.Item key={index} style={{ border: "0px" }}>
                   <Row>
-                    <Col md={2} style={{display: "flex", alignItems: "center"}}>
+                    <Col
+                      md={2}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
                       <Image src={item.image} alt={item.name} fluid rounded />
                     </Col>
-                    <Col style={{display: "flex", alignItems: "center"}}>
+                    <Col style={{ display: "flex", alignItems: "center" }}>
                       <Link
                         to={`/product/${item.product}`}
                         style={{ textDecoration: "none" }}
@@ -155,7 +181,10 @@ const OrderScreen = () => {
                         {item.name}
                       </Link>
                     </Col>
-                    <Col md={4} style={{display: "flex", alignItems: "center"}}>
+                    <Col
+                      md={4}
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
                       {item.qty} x ${item.price} = ${item.qty * item.price}
                     </Col>
                   </Row>
@@ -221,6 +250,36 @@ const OrderScreen = () => {
                     )}
                   </ListGroup.Item>
                 )}
+
+                {userInfo &&
+                  userInfo.isAdmin === true &&
+                  order.isPaid === true &&
+                  order.isDelivered === false && (
+                    <ListGroup.Item
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <Button
+                        type="button"
+                        className="btn btn-block"
+                        onClick={deliverOrderHandler}
+                      >
+                        {loadingDeliver === true && (
+                          <Spinner
+                            as="span"
+                            animation="grow"
+                            size="sm"
+                            role="status"
+                            aria-hidden="true"
+                          />
+                        )}
+                        Mark as Delivered
+                      </Button>
+                    </ListGroup.Item>
+                  )}
               </ListGroup.Item>
             </ListGroup>
           </Card>
