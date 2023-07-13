@@ -79,7 +79,7 @@ const PlaceOrderScreen = () => {
                             rounded
                           />
                         </Col>
-                        <Col>
+                        <Col style={{ display: "flex", alignItems: "center" }}>
                           <Link
                             to={`/product/${item.product}`}
                             style={{ textDecoration: "none" }}
@@ -87,7 +87,10 @@ const PlaceOrderScreen = () => {
                             {item.name}
                           </Link>
                         </Col>
-                        <Col md={4}>
+                        <Col
+                          md={4}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
                           {item.qty} x ${item.price} = ${item.qty * item.price}
                         </Col>
                       </Row>
