@@ -104,7 +104,7 @@ const ProfileScreen = () => {
         </Form>
       </Col>
 
-      <Col md={9}>
+      {!userInfo.isAdmin && <Col md={9}>
         <h2 style={{ display: "flex", justifyContent: "center" }}>My Orders</h2>
         {isLoading ? (
           <Loader />
@@ -225,7 +225,7 @@ const ProfileScreen = () => {
             </tbody>
           </Table>
         )}
-      </Col>
+      </Col>}
     </Row>
   );
 };

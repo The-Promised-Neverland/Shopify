@@ -28,25 +28,30 @@ const Header = () => {
       <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect fixed="top">
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>Techverse</Navbar.Brand>
+            <Navbar.Brand>
+              <div>Techverse</div>
+              {userInfo && userInfo.isAdmin && <div style={{fontSize: '10px' , display: 'flex', justifyContent: 'center'}}>Admin Mode</div>}
+            </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <LinkContainer
-                to="/cart"
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <Nav.Link>
-                  <FaShoppingCart />
-                  Cart
-                  {cartItems.length > 0 && (
-                    <Badge pill bg="success" style={{ marginLeft: "5px" }}>
-                      {cartItems.reduce((a, c) => a + c.qty, 0)}
-                    </Badge>
-                  )}
-                </Nav.Link>
-              </LinkContainer>
+              {userInfo && !userInfo.isAdmin && (
+                <LinkContainer
+                  to="/cart"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Nav.Link>
+                    <FaShoppingCart />
+                    Cart
+                    {cartItems.length > 0 && (
+                      <Badge pill bg="success" style={{ marginLeft: "5px" }}>
+                        {cartItems.reduce((a, c) => a + c.qty, 0)}
+                      </Badge>
+                    )}
+                  </Nav.Link>
+                </LinkContainer>
+              )}
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="username">
                   <LinkContainer to="/profile">
@@ -76,7 +81,6 @@ const Header = () => {
                     <NavDropdown.Item>Users</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
-                
               )}
             </Nav>
           </Navbar.Collapse>

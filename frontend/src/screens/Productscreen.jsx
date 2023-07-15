@@ -11,7 +11,7 @@ import {
   Button,
   Form,
 } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetProductsDetailsQuery } from "../slices/productsApiSlice";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -19,6 +19,8 @@ import { addToCart } from "../slices/cartSlice";
 import { toast } from "react-toastify";
 
 const Productscreen = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+
   const { id: productId } = useParams();
   const dispatch = useDispatch();
 
@@ -127,23 +129,25 @@ const Productscreen = () => {
                     </Row>
                   </ListGroup.Item>
                 )}
-                <ListGroup.Item
-                  style={{ display: "flex", justifyContent: "center" }}
-                >
-                  {product.countInStock > 0 ? (
-                    <Button
-                      className="btn-block"
-                      type="button"
-                      onClick={addToCartHandler}
-                    >
-                      Add to Cart
-                    </Button>
-                  ) : (
-                    <span>
-                      <strong>It's dry out here!</strong>
-                    </span>
-                  )}
-                </ListGroup.Item>
+                {userInfo && userInfo.isAdmin === false && (
+                  <ListGroup.Item
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    {product.countInStock > 0 ? (
+                      <Button
+                        className="btn-block"
+                        type="button"
+                        onClick={addToCartHandler}
+                      >
+                        Add to Cart
+                      </Button>
+                    ) : (
+                      <span>
+                        <strong>It's dry out here!</strong>
+                      </span>
+                    )}
+                  </ListGroup.Item>
+                )}
               </ListGroup>
             </Card>
           </Col>
