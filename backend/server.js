@@ -26,15 +26,15 @@ app.use(cookieParser());
 
 
 
-// if (process.env.NODE_ENV === "production") {
-//   const __dirname = path.resolve();
-//   app.use(express.static(path.join(__dirname, "/frontend/build")));
+if (process.env.NODE_ENV === "production") {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
 
-// } else {
-//   app.get("/", (req, res) => {
-//     res.send("API is running ....");
-//   });
-// }
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running ....");
+  });
+}
 
 app.get('/', (req, res) => {
   res.send('API is running...');
