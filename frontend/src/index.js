@@ -29,9 +29,13 @@ import OrderListScreen from './screens/admin/OrderListScreen';
 import ProductListScreen from './screens/admin/ProductListScreen';
 import UsersListScreen from './screens/admin/UsersListScreen';
 import ProductEditScreen from './screens/admin/ProductEditScreen';
+import UserEditScreen from './screens/admin/UserEditScreen';
+import NotFound from './components/NotFound';
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
+    
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/product/:id" element={<Productscreen />} />
@@ -53,7 +57,9 @@ const router = createBrowserRouter(
         <Route path='/admin/productList' element={<ProductListScreen />} />
         <Route path='/admin/userList' element={<UsersListScreen />} />
         <Route path="/admin/product/:id/edit" element={<ProductEditScreen/>} />
+        <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
       </Route>
+        <Route path="*" element={<NotFound />} />
     </Route>
 
   )

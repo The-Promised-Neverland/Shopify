@@ -3,15 +3,30 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { useGetUsersQuery } from "../../slices/usersApiSlice";
-import { FaTimes, FaCheck, FaTrash } from "react-icons/fa";
+import { useGetUsersQuery, useDeleteUserMutation } from "../../slices/usersApiSlice";
+import { FaTimes, FaCheck, FaEdit,FaTrash } from "react-icons/fa";
+import {toast} from 'react-toastify'
 
 const UsersListScreen = () => {
-  const { data: users, isLoading, error } = useGetUsersQuery();
+  const { data: users,refetch, isLoading, error } = useGetUsersQuery();
 
+  const [deleteUser , { isLoading : loadingDelete }] = useDeleteUserMutation();
+
+  const deleteHandler = async(userId) => {
+    if(window.confirm){
+      try {
+        await deleteUser(userId);
+        refetch();
+        toast.success('User Deleted');
+      } catch (err) {
+        toast.error(err?.data?.message || err.error);
+      }
+    }
+  }
   return (
     <>
       <h1>Users</h1>
+      {loadingDelete && <Loader />}
       {isLoading === true ? (
         <Loader />
       ) : error ? (
@@ -37,7 +52,7 @@ const UsersListScreen = () => {
               </th>
               <th>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  ADMIN ACCESS
+                  ADMIN 
                 </div>
               </th>
               <th></th>
@@ -61,11 +76,17 @@ const UsersListScreen = () => {
                 </td>
                 <td>
                   <div style={{ display: "flex", justifyContent: "center" }}>
-                    {user.email}
+                    <a href={`mailto:${user.email}`}></a> {user.email}
                   </div>
                 </td>
                 <td>
-                  <div style={{ display: "flex", justifyContent: "center" , marginTop:'6px' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "6px",
+                    }}
+                  >
                     {user.isAdmin === true ? (
                       <FaCheck style={{ color: "green" }} />
                     ) : (
@@ -74,15 +95,24 @@ const UsersListScreen = () => {
                   </div>
                 </td>
                 <td>
-                    <Button
-                      className="btn-sm"
-                      style={{
-                        color: "ghostwhite",
-                      }}
-                    >
-                      Make Admin
+                  <LinkContainer
+                    to={`/admin/user/${user._id}/edit`}
+                    style={{
+                      padding: 0,
+                      backgroundColor: "transparent",
+                      border: "none",
+                      boxShadow: "none",
+                      outline: "none",
+                    }}
+                  >
+                    <Button disabled={user.isAdmin === true}>
+                      <FaEdit
+                        style={{
+                          color: user.isAdmin === true ? "black" : "red",
+                        }}
+                      />
                     </Button>
-                  
+                  </LinkContainer>
                 </td>
                 <td>
                   <Button
@@ -94,6 +124,7 @@ const UsersListScreen = () => {
                       outline: "none",
                     }}
                     disabled={user.isAdmin === true}
+                    onClick={() => deleteHandler(user._id)}
                   >
                     <FaTrash
                       style={{ color: user.isAdmin === true ? "black" : "red" }}

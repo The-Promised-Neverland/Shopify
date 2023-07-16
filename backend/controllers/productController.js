@@ -60,9 +60,17 @@ const updateProducts = asyncHandler(async (req, res) => {
     }
 });
 
+// Delete a product , route /api/product/delete private/admin access 
 const deleteProduct = asyncHandler(async (req, res) => {
-    await Product.deleteOne({ _id: req.params.id });
-    res.status(200).json({ message: 'Product deleted successfully' });
+    const product = await Product.findById(req.params.id);
+
+    if(product) {
+        await Product.deleteOne({_id : product._id});
+        res.status(200).json({message: 'Product deleted'});
+    }else {
+        res.status(404);
+        throw new Error('Resource not Found');
+    }
 })
 
 
