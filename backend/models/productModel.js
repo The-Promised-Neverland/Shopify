@@ -18,7 +18,7 @@ const reviewSchema = mongoose.Schema({
         required: true,
     }
 },{
-    timestamp: true,
+    timestamps: true,
 });
 const productSchema = new mongoose.Schema({
     user: {
