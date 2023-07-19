@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Form, Button, Col } from "react-bootstrap";
@@ -21,6 +21,7 @@ const PaymentScreen = () => {
     }
   }, [shippingAddress]);
 
+
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(savePaymentMethod(paymentMethod));
@@ -38,13 +39,37 @@ const PaymentScreen = () => {
             <Form.Check
               type="radio"
               className="my-2"
-              label="PayPal or Credit Card"
+              label="PayPal"
               id="PayPal"
               name="paymentMethod"
               value="PayPal"
-              checked
+              defaultChecked={paymentMethod === "PayPal"}
               onChange={(e) => setPaymentMethod(e.target.value)}
-            ></Form.Check>
+            />
+          </Col>
+          <Col>
+            <Form.Check
+              type="radio"
+              className="my-2"
+              label="Stripe"
+              id="Stripe"
+              name="paymentMethod"
+              value="Stripe"
+              defaultChecked={paymentMethod === "Stripe"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
+          </Col>
+          <Col>
+            <Form.Check
+              type="radio"
+              className="my-2"
+              label="Cash on Delivery"
+              id="Cash on Delivery"
+              name="paymentMethod"
+              value="Cash on Delivery"
+              defaultChecked={paymentMethod === "Stripe"}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+            />
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">

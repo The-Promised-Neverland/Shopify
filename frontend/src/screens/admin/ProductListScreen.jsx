@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button, Row, Col } from "react-bootstrap";
+import { Table, Button, Row, Col, Spinner } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import {
@@ -12,7 +12,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import Paginate from "../../components/Paginate";
-
+import "./BlinkButton.css";
 
 const ProductListScreen = () => {
 
@@ -23,16 +23,21 @@ const ProductListScreen = () => {
   const [createProduct, { isLoading: loadingCreate }] =
     useCreateProductMutation();
 
-  const [deleteProduct, {isLoading: loadingDelete}] = useDeleteProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
+
+  const [blinkingProduct, setBlinkingProduct] = useState(null);
 
   const deleteHandler = async (productId) => {
-    if(window.confirm("Are you sure?")){
+    if (window.confirm("Are you sure?")) {
       try {
-        await deleteProduct({productId});
-        toast.success('Product Deleted');
+        setBlinkingProduct(productId);
+        await deleteProduct({ productId });
+        toast.success("Product Deleted");
         refetch();
       } catch (err) {
-        toast.error(err?.data?.message || err.error)
+        toast.error(err?.data?.message || err.error);
+      } finally {
+        setBlinkingProduct(null);
       }
     }
   };
@@ -41,13 +46,14 @@ const ProductListScreen = () => {
     if (window.confirm("Are you sure you want to create a new product?")) {
       try {
         await createProduct();
-        toast.success('Product Created');
+        toast.success("Product Created");
         refetch();
       } catch (err) {
         toast.error(err.message || err.error);
       }
     }
   };
+
   return (
     <>
       <Row className="align-items-center">
@@ -55,14 +61,21 @@ const ProductListScreen = () => {
           <h1>Products</h1>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3" onClick={createProductHandler}>
+          <Button className="btn-md m-3" onClick={createProductHandler}>
+            {loadingCreate === true && (
+              <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                style={{ marginRight: "1rem" }}
+              />
+            )}
             <FaEdit /> Create Product
           </Button>
         </Col>
       </Row>
-
-      {loadingCreate && <Loader />}
-      {loadingDelete && <Loader />}
 
       {isLoading ? (
         <Loader />
@@ -152,6 +165,9 @@ const ProductListScreen = () => {
                         boxShadow: "none",
                         outline: "none",
                       }}
+                      className={
+                        blinkingProduct === product._id ? "blinking" : ""
+                      }
                       onClick={() => deleteHandler(product._id)}
                     >
                       <FaTrash style={{ color: "red" }} />

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
@@ -70,10 +70,18 @@ const LoginScreen = () => {
           className="mt-2"
           disabled={isLoading}
         >
+          {isLoading === true && (
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+              style={{ marginRight: "1rem" }}
+            />
+          )}
           Sign In
         </Button>
-
-        {isLoading && <Loader />}
       </Form>
 
       <Row className="py-3">
@@ -81,7 +89,11 @@ const LoginScreen = () => {
           New Customer?
           <Link
             to={redirect ? `/register?redirect=${redirect}` : "/"}
-            style={{ textDecoration: "none" , fontWeight:'bold' , marginLeft:'5px'  }}
+            style={{
+              textDecoration: "none",
+              fontWeight: "bold",
+              marginLeft: "5px",
+            }}
           >
             Register
           </Link>

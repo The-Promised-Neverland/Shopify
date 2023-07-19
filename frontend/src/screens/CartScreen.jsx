@@ -16,7 +16,9 @@ import { addToCart, removeFromCart } from "../slices/cartSlice";
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { cartItems } = useSelector((state) => state.cart);
+
   const addToCartHandler = async (data, orderQty) => {
     const cartSchema = {
       product: data.product, // id of the product
@@ -26,10 +28,11 @@ const CartScreen = () => {
       countInStock: data.countInStock,
       qty: orderQty,
     };
-    
-    removeFromCart(data.product)
+
+    removeFromCart(data.product);
     dispatch(addToCart(cartSchema));
   };
+
   const RemoveFromCartHandler = async (id) => {
     dispatch(removeFromCart(id));
   };

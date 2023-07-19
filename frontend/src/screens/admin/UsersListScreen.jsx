@@ -1,32 +1,44 @@
-import React from "react";
-import { LinkContainer } from "react-router-bootstrap";
+import React, { useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { useGetUsersQuery, useDeleteUserMutation } from "../../slices/usersApiSlice";
-import { FaTimes, FaCheck, FaEdit,FaTrash } from "react-icons/fa";
-import {toast} from 'react-toastify'
+import {
+  useGetUsersQuery,
+  useDeleteUserMutation,
+} from "../../slices/usersApiSlice";
+import { FaTimes, FaCheck, FaEdit, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { LinkContainer } from "react-router-bootstrap";
+import "./BlinkButton.css";
+import { useDeleteOrdersMutation } from "../../slices/ordersApiSlice";
 
 const UsersListScreen = () => {
-  const { data: users,refetch, isLoading, error } = useGetUsersQuery();
+  const { data: users, refetch, isLoading, error } = useGetUsersQuery();
 
-  const [deleteUser , { isLoading : loadingDelete }] = useDeleteUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
-  const deleteHandler = async(userId) => {
-    if(window.confirm){
+  const [deleteOrders] = useDeleteOrdersMutation();
+
+  const [blinkingProduct, setBlinkingProduct] = useState(null);
+
+  const deleteHandler = async (userId) => {
+    if (window.confirm("Are you sure?")) {
       try {
+        setBlinkingProduct(userId);
+        await deleteOrders({ id: userId });
         await deleteUser(userId);
         refetch();
-        toast.success('User Deleted');
+        toast.success("User Deleted");
       } catch (err) {
         toast.error(err?.data?.message || err.error);
+        setBlinkingProduct(null);
       }
     }
-  }
+  };
+
   return (
     <>
       <h1>Users</h1>
-      {loadingDelete && <Loader />}
       {isLoading === true ? (
         <Loader />
       ) : error ? (
@@ -52,7 +64,7 @@ const UsersListScreen = () => {
               </th>
               <th>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                  ADMIN 
+                  ADMIN
                 </div>
               </th>
               <th></th>
@@ -76,7 +88,7 @@ const UsersListScreen = () => {
                 </td>
                 <td>
                   <div style={{ display: "flex", justifyContent: "center" }}>
-                    <a href={`mailto:${user.email}`}></a> {user.email}
+                    <a href={`mailto:${user.email}`}>{user.email}</a>
                   </div>
                 </td>
                 <td>
@@ -125,9 +137,10 @@ const UsersListScreen = () => {
                     }}
                     disabled={user.isAdmin === true}
                     onClick={() => deleteHandler(user._id)}
+                    className={blinkingProduct === user._id ? "blinking" : ""}
                   >
                     <FaTrash
-                      style={{ color: user.isAdmin === true ? "black" : "red" }}
+                      style={{ color: user.isAdmin === true ? "blue" : "red" }}
                     />
                   </Button>
                 </td>

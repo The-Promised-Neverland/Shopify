@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { Table, Form, Button, Row, Col } from "react-bootstrap";
+import { Table, Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -98,16 +98,36 @@ const ProfileScreen = () => {
             ></Form.Control>
           </Form.Group>
           <Button type="submit" variant="primary" className="my-2">
+            {loadingUpdateProfile && (
+              <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                style={{ marginRight: "1rem" }}
+              />
+            )}
             Update
           </Button>
-          {loadingUpdateProfile && <Loader />}
         </Form>
       </Col>
-      {userInfo.isAdmin && error && (
-        <Message variant="danger">
-          {error?.data?.message || error.message}
-        </Message>
-      )}
+
+      {userInfo.isAdmin === true &&
+        (error ? (
+          <Col md={9}>
+            <Message variant="danger">
+              {error?.data?.message || error.message}
+            </Message>
+          </Col>
+        ) : (
+          <Col md={9}>
+            <h2 style={{ display: "flex", justifyContent: "center" }}>
+              Admin Chat Section
+            </h2>
+          </Col>
+        ))}
+
       {!userInfo.isAdmin && (
         <Col md={9}>
           <h2 style={{ display: "flex", justifyContent: "center" }}>
@@ -219,7 +239,7 @@ const ProfileScreen = () => {
                     </td>
                     <td>
                       <LinkContainer
-                        to={`/order/${order._id}`}
+                        to={`/orderDetails/${order._id}`}
                         style={{ color: "ghostwhite" }}
                       >
                         <Button className="btn-sm" variant="dark">

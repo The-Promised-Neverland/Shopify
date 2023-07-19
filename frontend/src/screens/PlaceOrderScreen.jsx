@@ -1,20 +1,18 @@
 import React from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { toast } from "react-toastify";
 import Message from "../components/Message";
-import { useCreateOrderMutation } from "../slices/ordersApiSlice.js";
-import { clearCartitems } from "../slices/cartSlice";
+import { usePlaceOrderMutation } from "../slices/ordersApiSlice.js";
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const [createOrder] = useCreateOrderMutation();
+  const [placeOrder] = usePlaceOrderMutation();
 
   useEffect(() => {
     if (!cart.shippingAddress.address) {
@@ -25,20 +23,24 @@ const PlaceOrderScreen = () => {
   }, [navigate, cart.paymentMethod, cart.shippingAddress.address]);
 
   const placeOrderHandler = async () => {
-    try {
-      const res = await createOrder({
-        orderItems: cart.cartItems, //array
-        shippingAddress: cart.shippingAddress,
-        paymentMethod: cart.paymentMethod,
-        itemsPrice: cart.itemsPrice,
-        shippingPrice: cart.shippingPrice,
-        taxPrice: cart.taxPrice,
-        totalPrice: cart.totalPrice,
-      }).unwrap();
-      dispatch(clearCartitems());
-      navigate(`/order/${res._id}`);
-    } catch (error) {
-      toast.error(error);
+    if (cart.paymentMethod === "Cash on Delivery") {
+      try {
+        await placeOrder({
+          orderItems: cart.cartItems, //array
+          shippingAddress: cart.shippingAddress,
+          paymentMethod: cart.paymentMethod,
+          itemsPrice: cart.itemsPrice,
+          shippingPrice: cart.shippingPrice,
+          taxPrice: cart.taxPrice,
+          totalPrice: cart.totalPrice,
+        }).unwrap();
+
+        navigate(`/success`);
+      } catch (error) {
+        toast.error(error);
+      }
+    } else {
+      navigate(`/orderPayments/${cart.paymentMethod}`);
     }
   };
 

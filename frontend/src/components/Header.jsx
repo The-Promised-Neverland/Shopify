@@ -57,7 +57,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <SearchBox/>
+              <SearchBox />
 
               {userInfo && !userInfo.isAdmin && (
                 <LinkContainer
@@ -89,7 +89,10 @@ const Header = () => {
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <LinkContainer to="/login">
+                <LinkContainer
+                  to="/login"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
                   <Nav.Link>
                     <FaUser />
                     Sign in
@@ -97,7 +100,11 @@ const Header = () => {
                 </LinkContainer>
               )}
               {userInfo && userInfo.isAdmin === true && (
-                <NavDropdown title="Admin" id="adminmenu">
+                <NavDropdown
+                  title="Admin"
+                  id="adminmenu"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
                   <LinkContainer to="/admin/orderList">
                     <NavDropdown.Item>Orders</NavDropdown.Item>
                   </LinkContainer>

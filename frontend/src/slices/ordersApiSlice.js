@@ -1,11 +1,11 @@
 import { apiSlice } from "./apiSlice";
-import { ORDERS_URL } from "../constants";
+import { ORDERS_URL, CREATE_STRIPE_SESSION } from "../constants";
 import { PAYPAL_URL } from "../constants";
 // /api/orders
 
 export const ordersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    createOrder: builder.mutation({
+    placeOrder: builder.mutation({
       query: (order) => ({
         url: ORDERS_URL,
         method: "POST",
@@ -31,6 +31,27 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5,
     }),
+    StripeCheckoutSession: builder.mutation({
+      query: ({
+        orderItems,
+        itemsPrice,
+        userID,
+        shippingAddress,
+        shippingPrice,
+        taxPrice,
+      }) => ({
+        url: CREATE_STRIPE_SESSION,
+        method: "POST",
+        body: {
+          orderItems,
+          itemsPrice,
+          userID,
+          shippingAddress,
+          shippingPrice,
+          taxPrice,
+        },
+      }),
+    }),
     getUserOrders: builder.query({
       query: () => ({
         url: `${ORDERS_URL}/myOrders`,
@@ -46,18 +67,27 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
     deliverOrder: builder.mutation({
       query: (orderId) => ({
         url: `${ORDERS_URL}/${orderId}/deliver`,
-        method: 'PUT'
+        method: "PUT",
+      }),
+    }),
+    deleteOrders : builder.mutation({
+      query: ({id}) => ({
+        url: `${ORDERS_URL}/orderDelete`,
+        method: 'DELETE',
+        body: {id},
       })
     })
   }),
 });
 
 export const {
-  useCreateOrderMutation,
+  usePlaceOrderMutation,
   useGetOrderDetailsQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
   useGetUserOrdersQuery,
   useGetOrdersQuery,
   useDeliverOrderMutation,
+  useStripeCheckoutSessionMutation,
+  useDeleteOrdersMutation
 } = ordersApiSlice;

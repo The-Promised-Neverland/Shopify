@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
@@ -94,7 +94,6 @@ const ProductEditScreen = () => {
 
       <FormContainer>
         <h1>Edit Product</h1>
-        {loadingUpdate && <Loader />}
 
         {isLoading ? (
           <Loader />
@@ -174,6 +173,14 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Button type="submit" variant="primary" className="my-2">
+              {loadingUpdate && <Spinner
+                as="span"
+                animation="grow"
+                size="sm"
+                role="status"
+                aria-hidden="true"
+                style={{ marginRight: "1rem" }}
+              />}
               Update
             </Button>
           </Form>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Spinner } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
@@ -22,7 +22,7 @@ const RegisterScreen = () => {
 
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
-  const redirect = sp.get("redirect") || '/';
+  const redirect = sp.get("redirect") || "/";
 
   useEffect(() => {
     if (userInfo) {
@@ -38,11 +38,11 @@ const RegisterScreen = () => {
     } else {
       try {
         const res = await register({ name, email, password }).unwrap();
-        dispatch(setCredentials({...res}));
+        dispatch(setCredentials({ ...res }));
         navigate(redirect);
       } catch (error) {
         toast.error(error?.data?.message || error.error);
-        console.log('error', error);
+        console.log("error", error);
       }
     }
   };
@@ -98,6 +98,16 @@ const RegisterScreen = () => {
           className="mt-2"
           disabled={isLoading}
         >
+          {isLoading === true && (
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+              style={{ marginRight: "1rem" }}
+            />
+          )}
           Sign Up
         </Button>
 

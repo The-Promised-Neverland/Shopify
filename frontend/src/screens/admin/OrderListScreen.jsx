@@ -8,6 +8,7 @@ import { FaTimes } from "react-icons/fa";
 
 const OrderListScreen = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
+  console.log(orders);
 
   return (
     <>
@@ -111,7 +112,7 @@ const OrderListScreen = () => {
                 </td>
                 <td>
                   <LinkContainer
-                    to={`/order/${order._id}`}
+                    to={`/orderDetails/${order._id}`}
                     style={{ backgroundColor: "#7b8a8b" }}
                   >
                     <Button
