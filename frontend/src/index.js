@@ -35,10 +35,12 @@ import NotFound from './components/NotFound';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    
+
     <Route path="/" element={<App />}>
       <Route index={true} path="/" element={<HomeScreen />} />
+      <Route path="/search/:keyword" element={<HomeScreen />} />
       <Route path="/page/:pageNumber" element={<HomeScreen />} />
+      <Route path="/search/:keyword/page/:pageNumber" element={<HomeScreen />} />
       <Route path="/product/:id" element={<Productscreen />} />
       <Route path="/Cart" element={<CartScreen />} />
       <Route path="/login" element={<LoginScreen />} />
@@ -51,17 +53,17 @@ const router = createBrowserRouter(
         <Route path="/placeorder" element={<PlaceOrderScreen />} />
         <Route path="/order/:id" element={<OrderScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
-        
+
       </Route>
       <Route path='' element={<AdminRoute />}>
         <Route path="/admin/orderList" element={<OrderListScreen />} />
         <Route path='/admin/productList' element={<ProductListScreen />} />
         <Route path='/admin/productList/:pageNumber' element={<ProductListScreen />} />
         <Route path='/admin/userList' element={<UsersListScreen />} />
-        <Route path="/admin/product/:id/edit" element={<ProductEditScreen/>} />
+        <Route path="/admin/product/:id/edit" element={<ProductEditScreen />} />
         <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
       </Route>
-        <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<NotFound />} />
     </Route>
 
   )

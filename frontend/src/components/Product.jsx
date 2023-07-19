@@ -2,6 +2,8 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "./Rating";
+import {Container} from "react-bootstrap";
+
 
 const Product = ({ product }) => {
   return (
@@ -10,11 +12,6 @@ const Product = ({ product }) => {
         <Card.Img
           src={product.image}
           variant="top"
-          style={{
-            height: "200px",
-            objectFit: "cover",
-            maxWidth: "100%",
-          }}
         />
       </Link>
       <Card.Body>
@@ -37,3 +34,4 @@ const Product = ({ product }) => {
 };
 
 export default Product;
+

@@ -16,21 +16,23 @@ import { addToCart, removeFromCart } from "../slices/cartSlice";
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.cart);
   const addToCartHandler = async (data, orderQty) => {
     const cartSchema = {
-      product: data._id, // id of the product
+      product: data.product, // id of the product
       name: data.name,
       image: data.image,
       price: data.price,
       countInStock: data.countInStock,
       qty: orderQty,
     };
+    
+    removeFromCart(data.product)
     dispatch(addToCart(cartSchema));
   };
   const RemoveFromCartHandler = async (id) => {
     dispatch(removeFromCart(id));
   };
-  const { cartItems } = useSelector((state) => state.cart);
 
   const checkOutHandler = () => {
     navigate("/login?redirect=/shipping");

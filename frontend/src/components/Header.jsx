@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLogoutMutation } from "../slices/usersApiSlice";
 import { logout } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import SearchBox from "./SearchBox";
 
 const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
@@ -24,18 +25,40 @@ const Header = () => {
   };
 
   return (
-    <header>
-      <Navbar bg="dark" variant="dark" expand="md" collapseOnSelect fixed="top">
-        <Container>
+    <header style={{ backgroundColor: "red" }}>
+      <Navbar
+        bg="dark"
+        variant="dark"
+        expand="md"
+        collapseOnSelect
+        fixed="top"
+        style={{ backgroundColor: "red" }}
+      >
+        <Container
+          style={{ maxWidth: "inherit", marginLeft: "2%", marginRight: "2%" }}
+        >
           <LinkContainer to="/">
             <Navbar.Brand>
               <div>Techverse</div>
-              {userInfo && userInfo.isAdmin && <div style={{fontSize: '10px' , display: 'flex', justifyContent: 'center'}}>Admin Mode</div>}
+              {userInfo && userInfo.isAdmin && (
+                <div
+                  style={{
+                    fontSize: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  Admin Mode
+                </div>
+              )}
             </Navbar.Brand>
           </LinkContainer>
+
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
+              <SearchBox/>
+
               {userInfo && !userInfo.isAdmin && (
                 <LinkContainer
                   to="/cart"
@@ -53,7 +76,11 @@ const Header = () => {
                 </LinkContainer>
               )}
               {userInfo ? (
-                <NavDropdown title={userInfo.name} id="username">
+                <NavDropdown
+                  title={userInfo.name}
+                  id="username"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
                   <LinkContainer to="/profile">
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
