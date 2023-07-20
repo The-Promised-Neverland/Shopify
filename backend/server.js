@@ -52,6 +52,7 @@ app.post(
     // Handle the event
     switch (event.type) {
       case "checkout.session.completed":
+        res.status(200);
         const session = event.data.object;
 
         const paymentIntent = await stripe.paymentIntents.retrieve(
