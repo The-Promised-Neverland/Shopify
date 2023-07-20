@@ -56,8 +56,8 @@ const router = createBrowserRouter(
         <Route path="/orderPayments/:id" element={<PaymentRoute />} />
         <Route path="/orderDetails/:id" element={<OrderDetailsScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
-        <Route path="https://techverse-dtq7.onrender.com/success" element={<SuccessScreen />} />
-        <Route path="https://techverse-dtq7.onrender.com/failed" element={<FailedScreen />} />
+        <Route path="/success" element={<SuccessScreen />} />
+        <Route path="/failed" element={<FailedScreen />} />
 
         
       </Route>
@@ -89,3 +89,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+

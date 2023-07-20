@@ -11,12 +11,22 @@ import orderRoutes from "./routes/orderRoutes.js";
 import Stripe from "stripe";
 import asyncHandler from "./middleware/asyncHandler.js";
 import Order from "./models/orderModel.js";
+import uploadRoutes from './routes/uploadRoutes.js'
+import cors from 'cors';
+
 
 dotenv.config();
 
 const port = process.env.PORT || 5000;
 connectDB();
 const app = express();
+
+app.use(
+  cors({
+    origin: ["https://checkout.stripe.com",process.env.DOMAIN],
+  })
+);
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -119,23 +129,13 @@ app.post(
 // Body parser Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 //Cookie parser middleware
 app.use(cookieParser());
-
-const __dirname = path.resolve();
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/build")));
-} else {
-  app.get("/", (req, res) => {
-    res.send("API is running ....");
-  });
-}
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use('/api/upload', uploadRoutes);
 
 app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID })
@@ -203,13 +203,13 @@ app.post(
       payment_method_types: ["card"],
       mode: "payment",
       line_items: lineItems,
-      success_url: 'https://techverse-dtq7.onrender.com/success',
-      cancel_url: 'https://techverse-dtq7.onrender.com',
       client_reference_id: userID,
       metadata: {
         shipping_address: JSON.stringify(shippingAddress),
         items_price: itemsPriceNumber,
       },
+      success_url: `${process.env.DOMAIN}/success`,
+      cancel_url: `${process.env.DOMAIN}/failed`,
     });
 
     res.send({ url: session.url });
@@ -217,6 +217,25 @@ app.post(
 );
 // Currently over 10,000 dollars is not allowed on stripe
 //dashboard.stripe.com/test/logs?showIP=false&created[preset]=1D&success=false&method[0]=post&method[1]=delete&direction[0]=self&direction[1]=connect_in
+
+
+const __dirname = path.resolve(); // set __dirname to current directory
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+
+
+//always write this at the end
+if (process.env.NODE_ENV === "production") {
+  const currentDirectory = path.resolve();
+  app.use(express.static(path.join(currentDirectory, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(currentDirectory, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);
