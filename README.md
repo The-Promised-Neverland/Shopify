@@ -5,5 +5,7 @@ Prod v1 - https://shopify-jz0j.onrender.com
 Prod v2 - https://shopify-z4xg.onrender.com
 
 
+Stripe Testing - https://stripe.com/docs/testing 
+
 Credentials to use Paypal Sandbox account
 ![Sandbox-accounts-PayPal-Developer](https://github.com/Somvaded/Techverse/assets/128318170/457699a5-1771-4c7c-8853-139054d98b51)
