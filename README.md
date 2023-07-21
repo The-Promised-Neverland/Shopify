@@ -3,6 +3,12 @@ Introducing my personal project,  Shopify, where I've strapped everything togeth
 
 @Testing
 
+1) Clone the repo
+2) Setup .env files
+3) Execute "npm run prepareForTesting" in terminal
+
+   
+
 Website live on - https://shopify-jz0j.onrender.com/
 
 
