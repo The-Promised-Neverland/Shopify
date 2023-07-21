@@ -2,7 +2,7 @@
 E-commerce shopping app using MERN stack. Deployed CI/CD pipelines for seamless integration and deployment. Used CronJob to ping host every 15 mins to prevent sleep cycles on Render  
 
 Prod v1 - https://shopify-jz0j.onrender.com
-Prod v2 - https://shopify-z4xg.onrender.com
+Prod v2 - https://techverse-dtq7.onrender.com
 
 
 Stripe Testing - https://stripe.com/docs/testing 
