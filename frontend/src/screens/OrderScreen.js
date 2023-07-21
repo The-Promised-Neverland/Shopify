@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { PayPalButton } from "react-paypal-button-v2";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Button,
+  Spinner,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -12,17 +19,20 @@ import {
   updateOrderPayStatus,
 } from "../actions/orderActions";
 import {
-  ORDER_PAY_RESET,
   ORDER_DELIVER_RESET,
+  ORDER_PAY_RESET,
 } from "../constants/orderConstants";
+import {
+  PayPalButtons,
+  PayPalScriptProvider,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   let { id } = useParams(); // gets the orderID from the url (OrderId)
-
-  const [SDKready, SetSDKReady] = useState(false);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -31,7 +41,7 @@ const OrderScreen = () => {
   const { orderInfo, loading, error } = orderDetails;
 
   const orderPay = useSelector((state) => state.orderPay);
-  const { loading: loadingPay, success: successPay } = orderPay; // renaming loading to loadingPay
+  const { loading: loadingPay } = orderPay; // renaming loading to loadingPay
 
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const {
@@ -40,58 +50,91 @@ const OrderScreen = () => {
     success: successDeliver,
   } = orderDeliver; // renaming loading to loadingPay
 
-  // React Paypal button documentation- https://www.npmjs.com/package/react-paypal-button-v2
-  const successPaymentHandler = (paymentStatus) => {
-    dispatch(updateOrderPayStatus(id, paymentStatus)); // action takes {orderId,paymentStatus}
-  };
-
   const deliveryHandler = (orderId) => {
     dispatch(updateOrderDeliverStatus(orderId));
   };
 
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
   useEffect(() => {
     const injectPayPalScript = async () => {
-      const { data: clientId } = await axios.get("/api/config/paypal"); // renaming data to clientId
+      const { data: clientId } = await axios.get("/api/config/paypal");
 
-      //Creating script dynamically
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.async = true;
-      script.onload = () => {
-        // script ready, SDK ready
-        SetSDKReady(true);
-      };
+      // Set up PayPal options
+      paypalDispatch({
+        type: "resetOptions",
+        value: {
+          "client-id": clientId,
+          currency: "USD",
+        },
+      });
 
-      //injecting the script in the HTML
-      document.body.appendChild(script);
+      // Set script to pending
+      paypalDispatch({ type: "setLoadingStatus", value: "pending" });
     };
 
     if (!userInfo) {
       // user not loaded
       navigate("/login");
     }
-    /* if order does not exist, or,
-       the fetched orderid does not match the required order id ,or,
-       if payment is successful, then dispatch and fetch the required order */
-    if (!orderInfo || orderInfo._id !== id || successPay || successDeliver) {
-      dispatch({type: ORDER_PAY_RESET});
-      dispatch({type: ORDER_DELIVER_RESET});
-      dispatch(getOrderDetails(id)); // order id
+
+    if (!orderInfo || orderInfo._id !== id || successDeliver) {
+      dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
+      dispatch(getOrderDetails(id));
     } else if (!orderInfo.isPaid) {
-      // if order is not paid
       if (!window.paypal) {
-        // if paypal script is not there
         injectPayPalScript();
-      } else {
-        SetSDKReady(true);
       }
     }
+  }, [orderInfo, userInfo, id, successDeliver, paypalDispatch]);
 
-    if (successPay === true) {
-      navigate("/profile");
-    }
-  }, [dispatch, navigate, orderInfo, userInfo, id, successPay, successDeliver]);
+  // PayPal success and error handling functions
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        dispatch(updateOrderPayStatus(id, details));
+        dispatch(getOrderDetails(id));
+      } catch (error) {}
+    });
+  }
+
+  function onError(err) {
+    console.error(err.message);
+  }
+
+  function createOrder(data, actions) {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: orderInfo.totalPrice,
+          },
+        },
+      ],
+    });
+  }
+
+  // PayPal button component
+  const PayPalButtonComponent = () => (
+    <ListGroup.Item>
+      {loadingPay && <Loader />}
+      {isPending ? (
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <Spinner animation="border" />
+          <span>Loading PayPal...</span>
+        </div>
+      ) : (
+        <ListGroup.Item style={{ width: "100%", paddingBottom: "0" }}>
+          <PayPalButtons
+            createOrder={createOrder}
+            onApprove={onApprove}
+            onError={onError}
+          />
+        </ListGroup.Item>
+      )}
+    </ListGroup.Item>
+  );
 
   return loading || Object.entries(orderInfo).length === 0 ? (
     <Loader />
@@ -220,14 +263,7 @@ const OrderScreen = () => {
               {!orderInfo.isPaid && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
-                  {!SDKready ? (
-                    <Loader />
-                  ) : (
-                    <PayPalButton
-                      amount={orderInfo.totalPrice}
-                      onSuccess={successPaymentHandler}
-                    />
-                  )}
+                  {PayPalButtonComponent()}
                 </ListGroup.Item>
               )}
 
@@ -252,4 +288,12 @@ const OrderScreen = () => {
   );
 };
 
-export default OrderScreen;
+const OrderScreenWithPayPal = () => {
+  return (
+    <PayPalScriptProvider>
+      <OrderScreen />
+    </PayPalScriptProvider>
+  );
+};
+
+export default OrderScreenWithPayPal;
