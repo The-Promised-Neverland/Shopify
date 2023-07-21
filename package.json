@@ -12,7 +12,7 @@
     "data:import": "node backend/seeder",
     "data:destroy": "node backend/seeder -d",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
-    "prepareForTesting": "npm install && npm install --prefix frontend"
+    "prepareForTesting": "npm install && npm install --prefix frontend && npm run dev"
   },
   "author": "Abhijit Roy",
   "license": "ISC",
